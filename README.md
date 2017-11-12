@@ -1,3 +1,3 @@
-# Adaptive-Network Private
+# Adaptive-Network
 
 reinforcement learning based adaptive network 
