@@ -1,0 +1,41 @@
+
+
+2017/11/27 conference call
+* discussion 내용: 다른 deep RL 논문의 경우는 state와 action의 수가 매우 많음
+
+* 현재상황: NW environment 부분 python 변환 완료
+* next step: RL 부분 코딩 필요 - Q learning algoirhtm - Q table 기반으로 simple example 구현 
+--> simple example로 부터 시작해서 점점 더 복잡화 시키는 방향으로 발전
+
+* time line
+- 민혜 학회: 12/3 - 9
+- 주현 휴가: 12/9 - 16
+1. 주현 휴가 전까지 RL 부분 코딩
+2. 민혜 주현 휴가동안 코딩 catch up 및 아이디어/발전내용 찾기
+
+
+==============================
+2017/11/11 meeting
+
+* Contents
+- Evolutionary Network Formation for Dynamic Wireless Networks with Network Coding 논문 정리 및 Q&A
+- paper idea 정리
+- discussion 내용
+	- state: the number of physically located node
+	- action: difference of transmission range
+	- reward(R): throughput (can be delayed feedback, should be implemented in simultation code)
+	- utility: utility = u + w * R - (1 - w) *a
+
+	- no transition probability (model-free, reinforment learning)
+	- experiment setup: change beta(link failure rate), change node location
+	- estimate Q(s,a) value based on throughput reward
+	- if link failure rate is changed, adapt transmission range by using Q learning based on throughput reward
+
+
+* To do
+민혜:
+- 기존 코드 정리 및 업로드 
+
+주현:
+- ICML application paper 분석 및 공유
+- github 정리
