@@ -33,7 +33,7 @@ mu = 4/5    # node density
 one_dim = 5
 max_block = one_dim ** 2
 beta = 0.1  # link failure rate
-tx_r = 2    # default radius of tx range
+tx_r = 2    # default radius of tx range # action
 
 # 2. initialize network formation
 no_events = np.zeros(max_block, dtype=np.int32)
@@ -102,10 +102,10 @@ for i in range(num_node):
         if adj_matrix[i,j] == 1:
             G.add_edges_from([(i,j)])
 # red coloring for source and destination nodes
-val_map = {num_node -1: 0.57,
-           num_node -2: 0.57,
-           num_node -3: 0.57,
-           num_node -4: 0.57}
+val_map = {num_node - 1: 0.57,
+           num_node - 2: 0.57,
+           num_node - 3: 0.57,
+           num_node - 4: 0.57}
 values = [val_map.get(node, 0.1) for node in G.nodes()]
 labels = {}
 for node in G.nodes():
