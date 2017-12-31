@@ -2,16 +2,16 @@
 import numpy as np
 from collections import defaultdict
 import random
-from env import Environment
+
 
 class QLearningAgent:
-    def __init__(self, actions):
-        # actions = [0, 1, 2, 3]
-        self.actions = actions
+    def __init__(self, n_actions):
+        # actions = [-3, -2, -1, 0, 1, 2, 3]
+        self.n_actions = n_actions
         self.learning_rate = 0.01
         self.discount_factor = 0.9
-        self.epsilon = 0.1
-        self.q_table = defaultdict(lambda: [0.0, 0.0, 0.0, 0.0])
+        self.epsilon = 0.1 # epsilon greedy
+        self.q_table = defaultdict(lambda: [0.0] * self.n_actions)
 
     # update q function with sample <s, a, r, s'>
     def learn(self, state, action, reward, next_state):
@@ -25,7 +25,7 @@ class QLearningAgent:
     def get_action(self, state):
         if np.random.rand() < self.epsilon:
             # take random action
-            action = np.random.choice(self.actions)
+            action = np.random.choice(self.n_actions)
         else:
             # take action according to the q function table
             state_action = self.q_table[state]
@@ -45,25 +45,9 @@ class QLearningAgent:
                 max_index_list.append(index)
         return random.choice(max_index_list)
 
+    def print_qtable(self):
+        for k, v in self.q_table.items():
+            print(k, v)
 
-def qlearning():
-    n_actions = 4
-    agent = QLearningAgent(actions=list(range(n_actions)))
-    env = Environment()
-    ep_length = 10
-    for episode in range(1000):
-        state = env.reset()
 
-        for steps in range(ep_length):
-            action = agent.get_action(str(state))
-            next_beta = random.random()
-            next_state, reward = env.step(action, next_beta)
 
-            agent.learn(str(state), action, reward, str(next_state))
-
-            state = next_state
-            env.print_value_all(agent.q_table)
-
-    print(agent.q_table[0])
-
-qlearning()
