@@ -1,4 +1,19 @@
+2018/1/8 conference call
+* discussion 내용: 구현 중 Q&A
 
+* 현재 진행 상황:
+- Q table 기반 Q-learning 모듈 구현
+- Environment 구현, action이 주어지면 그에 따라 reward, next state return하도록
+- main 부분 구현하여 전체 구조 잡아놓음 
+
+* state 구현 관련 의문 사항(주현) 및 답변, 피드백(민혜)
+- adj_matrix의 diagonal term을 1로 넣어주기
+- beta (link failure rate)는 우선 0으로 고정시켜놓고 구현
+- player 마다 agent를 의미,
+- 각 player 마다 연결된 node 수가 state (state[p] = sum(adj_matrix[p,:])
+- action도 각 player마다 tx_r가 있어야함, 처음 initializing 할때만 같게 주어짐.
+
+=================================
 
 2017/11/27 conference call
 * discussion 내용: 다른 deep RL 논문의 경우는 state와 action의 수가 매우 많음
