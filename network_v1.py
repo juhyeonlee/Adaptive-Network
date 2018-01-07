@@ -57,9 +57,9 @@ for block in range(max_block):
 players = []
 for t in range(1, one_dim - 1):
     players += [i for i in
-                    range(np.sum(no_events[0:t*one_dim+1])+1,
-                          np.sum(no_events[0:(t+1)*one_dim-1])+1)]
-
+                    range(np.sum(no_events[0:t*one_dim+1]),
+                          np.sum(no_events[0:(t+1)*one_dim-1]))]
+print(players)
 len_players = len(players)
 print("num of players: ", len_players)
 
@@ -89,7 +89,6 @@ for f in range(num_node):
 # adjacent matrix
 adj_matrix = np.zeros((num_node, num_node))
 pp = players + list(range(num_node-4, num_node))
-# TODO: same node --> same random number?
 for p in pp:
     adj_matrix[p] = ((d[p] <= tx_r) * np.random.rand(1)) > beta
 
@@ -99,8 +98,8 @@ G = nx.DiGraph()
 for i in range(num_node):
     G.add_node(i)
     for j in range(num_node):
-        if adj_matrix[i,j] == 1:
-            G.add_edges_from([(i,j)])
+        if adj_matrix[i, j] == 1:
+            G.add_edges_from([(i, j)])
 # red coloring for source and destination nodes
 val_map = {num_node - 1: 0.57,
            num_node - 2: 0.57,
@@ -112,10 +111,10 @@ for node in G.nodes():
     labels[node] = str(node)
 nx.draw_networkx_nodes(G, node_loc, cmap=plt.get_cmap('jet'),
                        node_color=values, node_size=10)
-nx.draw_networkx_labels(G, node_loc, labels=labels, font_size=8)
+nx.draw_networkx_labels(G, node_loc, labels=labels, font_size=10)
 nx.draw_networkx_edges(G, node_loc, edge_color='c', arrows=True)
 plt.grid()
-# plt.show()
+plt.show()
 
 # find shortest path between sources and destinations (2 * 2)
 dist = []
