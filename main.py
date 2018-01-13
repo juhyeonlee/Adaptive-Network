@@ -1,5 +1,6 @@
 
 import random
+import numpy as np
 
 from env import Environment
 from Qlearning import QLearningAgent
@@ -15,23 +16,39 @@ if __name__ == '__main__':
     env = Environment(one_dim, mu, init_txr)
 
     n_actions = env.n_actions
-    agent = QLearningAgent(n_actions)
 
-    ep_length = 1
-    num_ep = 1
+
+    ep_length = 1000
+    num_ep = 100
+    sum_goodput = 0
+    sum_reward = 0
 
     for episode in range(num_ep):
-        beta = random.uniform(0.0, 0.3)  #TODO: specified particular distributions for link failure rate
+        # TODO: firstly set to 0, then specified particular distributions for link failure rate
+        beta = 0.0 # random.uniform(0.0, 0.3)
         state = env.reset(beta, init_txr)
-
+        agent = [QLearningAgent(n_actions)] * len(state)
+        action = np.zeros(len(state), dtype=np.int32)
         for steps in range(ep_length):
-            action = agent.get_action(state)
-            real_action = action - 3 # [0,6] --> [-3, 3]
-            next_state, reward = env.step(real_action)
+            for i in range(len(state)):
+                action[i] = agent[i].get_action(state[i])
+            # real_action = action - 3 # [0,6] --> [-3, 3]
+            next_state, reward, goodput = env.step(action)
 
-            agent.learn(state, action, reward, next_state)
+            for i in range(len(state)):
+                agent[i].learn(state[i], action[i], reward[i], next_state[i])
 
             state = next_state
 
-            agent.print_qtable()
+        # for i in range(len(state)):
+        #     agent[i].print_qtable()
+        # test
+        for i in range(len(state)):
+            action[i] = agent[i].get_greedy_action(state[i])
+        next_state, reward, goodput = env.step(action)
+        sum_goodput += goodput
+        print(np.sum(reward))
+        sum_reward += np.sum(reward)
+
+    print(sum_goodput / num_ep, sum_reward / num_ep)
 

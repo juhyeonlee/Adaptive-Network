@@ -2,6 +2,8 @@
 import numpy as np
 import networkx as nx
 
+import matplotlib.pyplot as plt
+
 
 class Environment:
     def __init__(self, dims, mu, init_txr):
@@ -9,9 +11,9 @@ class Environment:
         self.max_block = self.one_dim ** 2
         self.mu = mu # node density
         self.beta = 0.0
+        self.init_txr = init_txr
         self.txr = init_txr
-        self.last_txr = init_txr
-        self.action_space = [-3, -2, -1, 0, 1, 2, 3]
+        self.action_space = [0, 1, 2, 3, 4, 5, 6] #[-3, -2, -1, 0, 1, 2, 3]
         self.n_actions = len(self.action_space)
 
         # node state
@@ -20,14 +22,19 @@ class Environment:
         self.coords = []
         self.players = []
         self.node_loc = []
-        self.len_players = 0
+        self.num_players = 0
         self.num_node = 0
+        self.d = None
+        self.adj_matrix = None
+        self.current_state = None
+        self.beta_matrix = None
 
         # reward
         self.connectivity_ratio = 0.
         self.goodput = 0.
         self.reward = 0.
-        self.utility_coeff = 0.53
+        self.utility_coeff = 0.1
+        self.utility_pos_coeff = 0.1 # to make utiltiy to be positive
 
         # default coordination for each block
         i = 0
@@ -37,24 +44,28 @@ class Environment:
                 i += 1
 
     def step(self, action):
-        self.txr = self.last_txr + action
+        self.txr = action #self.last_txr + action
         self.last_txr = self.txr
-        d = np.zeros((self.num_node, self.num_node))
-        for f in range(self.num_node):
-            for t in range(self.num_node):
-                d[f, t] = np.linalg.norm(np.array(self.node_loc[f]) - np.array(self.node_loc[t]))
+        print("action: ", action)
 
         # adjacent matrix
-        adj_matrix = np.zeros((self.num_node, self.num_node))
+        self.adj_matrix = np.zeros((self.num_node, self.num_node))
         pp = self.players + list(range(self.num_node - 4, self.num_node))
-        for p in pp:
-            adj_matrix[p] = ((d[p] <= self.txr) * np.random.rand(1)) > self.beta
+        for idx, p in enumerate(pp):
+            self.adj_matrix[p] = (self.d[p] <= float(self.txr[idx])) * self.beta_matrix[p]
+        for i in range(self.num_node):
+            self.adj_matrix[i, i] = 1
+
+        # TODO: not including source and terminal nodes??
+        self.current_state = np.zeros(self.num_players)
+        for i in range(self.num_players):
+            self.current_state[i] = np.sum(self.adj_matrix[self.players[i]])
 
         G = nx.DiGraph()
         for i in range(self.num_node):
             G.add_node(i)
             for j in range(self.num_node):
-                if adj_matrix[i, j] == 1:
+                if self.adj_matrix[i, j] == 1:
                     G.add_edges_from([(i, j)])
 
         # find shortest path between sources and destinations (2 * 2)
@@ -83,28 +94,14 @@ class Environment:
         self.goodput = np.sum(np.divide(1, dist))
         print("connectivity ratio: ", self.connectivity_ratio)
         print("goodput: ", self.goodput)
-        self.reward = self.goodput * self.utility_coeff - action * (1.0 - self.utility_coeff)
+        #TODO: constant for positive value
+        self.reward = self.goodput - action * self.utility_coeff
 
         # next state
-        # node state
-        self.no_events = np.zeros(self.max_block, dtype=np.int32)
-        self.coords = []
-        # block coordination random generation
+        # change node location
         for block in range(self.max_block):
-            # the number of nodes per block based on poisson point process
-            self.no_events[block] = int(np.random.poisson(self.mu * 4))
             # random location
             self.coords.append(2 * np.random.rand(self.no_events[block], 2))
-
-        self.players = []
-        # the number of players
-        for t in range(1, self.one_dim - 1):
-            self.players += [i for i in
-                             range(np.sum(self.no_events[0:t * self.one_dim + 1]) + 1,
-                                   np.sum(self.no_events[0:(t + 1) * self.one_dim - 1]) + 1)]
-
-        self.len_players = len(self.players)
-        print("num of players: ", self.len_players)
 
         self.node_loc = []
         for b in range(self.max_block):
@@ -123,12 +120,30 @@ class Environment:
         self.num_node = len(self.node_loc)
         print("num of nodes: ", self.num_node)
 
-        return self.num_node, self.reward
+        self.d = np.zeros((self.num_node, self.num_node))
+        for f in range(self.num_node):
+            for t in range(self.num_node):
+                self.d[f, t] = np.linalg.norm(np.array(self.node_loc[f]) - np.array(self.node_loc[t]))
+
+        # adjacent matrix
+        self.adj_matrix = np.zeros((self.num_node, self.num_node))
+        self.beta_matrix = np.random.rand(self.num_node, self.num_node) > self.beta
+        pp = self.players + list(range(self.num_node - 4, self.num_node))
+        for idx, p in enumerate(pp):
+            self.adj_matrix[p] = (self.d[p] <= float(self.txr[idx])) * self.beta_matrix[p]
+        for i in range(self.num_node):
+            self.adj_matrix[i, i] = 1
+
+        # TODO: including source and terminal nodes??
+        self.current_state = np.zeros(self.num_players + 4)
+        for i in range(self.num_players + 4):
+            self.current_state[i] = np.sum(self.adj_matrix[pp[i]])
+
+        return self.current_state, self.reward, self.goodput
 
     def reset(self, beta, init_txr):
         self.beta = beta
-        self.txr = init_txr
-        self.last_txr = init_txr
+        self.init_txr = init_txr
 
         # node state
         self.no_events = np.zeros(self.max_block, dtype=np.int32)
@@ -151,11 +166,11 @@ class Environment:
         # the number of players
         for t in range(1, self.one_dim - 1):
             self.players += [i for i in
-                             range(np.sum(self.no_events[0:t * self.one_dim + 1]) + 1,
-                                   np.sum(self.no_events[0:(t + 1) * self.one_dim - 1]) + 1)]
+                             range(np.sum(self.no_events[0:t * self.one_dim + 1]),
+                                   np.sum(self.no_events[0:(t + 1) * self.one_dim - 1]))]
 
-        self.len_players = len(self.players)
-        print("num of players: ", self.len_players)
+        self.num_players = len(self.players)
+        print("num of players: ", self.num_players)
 
         for b in range(self.max_block):
             for n in range(self.no_events[b]):
@@ -172,6 +187,29 @@ class Environment:
         # distance matrix
         self.num_node = len(self.node_loc)
         print("num of nodes: ", self.num_node)
-        return self.num_node
+
+        self.d = np.zeros((self.num_node, self.num_node))
+        for f in range(self.num_node):
+            for t in range(self.num_node):
+                self.d[f, t] = np.linalg.norm(np.array(self.node_loc[f]) - np.array(self.node_loc[t]))
+
+        # adjacent matrix
+        self.adj_matrix = np.zeros((self.num_node, self.num_node))
+        self.beta_matrix = np.random.rand(self.num_node, self.num_node) > self.beta
+        pp = self.players + list(range(self.num_node - 4, self.num_node))
+        for p in pp:
+            self.adj_matrix[p] = (self.d[p] <= float(self.init_txr)) * self.beta_matrix[p]
+        for i in range(self.num_node):
+            self.adj_matrix[i, i] = 1
+
+        #TODO: including source and terminal nodes??
+        self.current_state = np.zeros(self.num_players + 4)
+        for i in range(self.num_players + 4):
+            self.current_state[i] = np.sum(self.adj_matrix[pp[i]])
+
+        # save current transmission range
+        self.last_txr = np.ones((self.num_players + 4), dtype=np.int32) * self.init_txr
+
+        return self.current_state
 
 

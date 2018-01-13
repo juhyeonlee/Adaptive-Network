@@ -10,11 +10,13 @@ class QLearningAgent:
         self.n_actions = n_actions
         self.learning_rate = 0.01
         self.discount_factor = 0.9
-        self.epsilon = 0.1 # epsilon greedy
+        self.epsilon = 0.2 # epsilon greedy
         self.q_table = defaultdict(lambda: [0.0] * self.n_actions)
 
     # update q function with sample <s, a, r, s'>
     def learn(self, state, action, reward, next_state):
+        #TODO: dimension이 next state 에서 달라짐 왜냐면 agent 각각이 소멸되니까? 그러면 각각의 player의 node 번호를 기억했다가 걔네들을 trace 해야되는건가? player수도 가변적임..
+        #TODO: multi-arm bandit의 가까운 문제인건가?
         current_q = self.q_table[state][action]
         # using Bellman Optimality Equation to update q function
         new_q = reward + self.discount_factor * max(self.q_table[next_state])
@@ -32,6 +34,11 @@ class QLearningAgent:
             action = self.arg_max(state_action)
         return action
 
+    def get_greedy_action(self, state):
+        state_action = self.q_table[state]
+        action = self.arg_max(state_action)
+        return action
+
     @staticmethod
     def arg_max(state_action):
         max_index_list = []
@@ -47,7 +54,7 @@ class QLearningAgent:
 
     def print_qtable(self):
         for k, v in self.q_table.items():
-            print(k, v)
+            print(k, np.argmax(v))
 
 
 
