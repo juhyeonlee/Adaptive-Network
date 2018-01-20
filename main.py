@@ -19,7 +19,7 @@ if __name__ == '__main__':
 
 
     ep_length = 1000
-    num_ep = 100
+    num_ep = 1
     sum_goodput = 0
     sum_reward = 0
 
@@ -27,7 +27,9 @@ if __name__ == '__main__':
         # TODO: firstly set to 0, then specified particular distributions for link failure rate
         beta = 0.0 # random.uniform(0.0, 0.3)
         state = env.reset(beta, init_txr)
-        agent = [QLearningAgent(n_actions)] * len(state)
+        agent = []
+        for i in range(len(state)):
+            agent.append(QLearningAgent(n_actions))
         action = np.zeros(len(state), dtype=np.int32)
         for steps in range(ep_length):
             for i in range(len(state)):
