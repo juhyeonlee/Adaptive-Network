@@ -29,10 +29,7 @@ class Environment:
         self.current_state = None
         self.beta_matrix = None
 
-        # reward
-        self.connectivity_ratio = 0.
-        self.goodput = 0.
-        self.reward = 0.
+        # reward parameters
         self.utility_coeff = 0.1
         self.utility_pos_coeff = 0.1 # to make utiltiy to be positive
 
@@ -86,19 +83,20 @@ class Environment:
 
         # calculate connectivity ratio and goodput
         # connectivity ratio: the number of connected path, max 1.0 (source 2 * dest 2 ) / 4
-        self.connectivity_ratio = 0.
+        connectivity_ratio = 0.
         for i in range(4):
             if dist[i] is not np.inf:
-                self.connectivity_ratio += 1.
-        self.connectivity_ratio /= 4.
-        self.goodput = np.sum(np.divide(1, dist))
-        print("connectivity ratio: ", self.connectivity_ratio)
-        print("goodput: ", self.goodput)
+                connectivity_ratio += 1.
+        connectivity_ratio /= 4.
+        goodput = np.sum(np.divide(1, dist))
+        print("connectivity ratio: ", connectivity_ratio)
+        print("goodput: ", goodput)
         #TODO: constant for positive value
-        self.reward = self.goodput - action * self.utility_coeff
+        reward = goodput - action * self.utility_coeff
 
         # next state
         # change node location
+        self.coords = []
         for block in range(self.max_block):
             # random location
             self.coords.append(2 * np.random.rand(self.no_events[block], 2))
@@ -139,7 +137,7 @@ class Environment:
         for i in range(self.num_players + 4):
             self.current_state[i] = np.sum(self.adj_matrix[pp[i]])
 
-        return self.current_state, self.reward, self.goodput
+        return self.current_state, reward, goodput
 
     def reset(self, beta, init_txr):
         self.beta = beta
@@ -150,11 +148,6 @@ class Environment:
         self.coords = []
         self.players = []
         self.node_loc = []
-
-        # reward
-        self.connectivity_ratio = 0.
-        self.goodput = 0.
-        self.reward = 0.
 
         # block coordination random generation
         for block in range(self.max_block):
