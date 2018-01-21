@@ -17,6 +17,7 @@ Future Schedule
 * 아주 나중에 idea: state 의 정의를 adjacent matrix를 가져다 사용하는 건? 
 --> 왜 이런생각이 났냐면 deep learning을 쓰려면 high dimension의 input (state definition)이 필요해서!! 
 
+==========================
 
 2018/1/8 conference call
 * discussion 내용: 구현 중 Q&A
