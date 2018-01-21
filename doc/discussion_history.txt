@@ -1,5 +1,9 @@
 2018/1/21 Conference call
 
+용어정리
+* step: 하나의 action을 취하는 set
+* episod: step들의 집합. 우리의 경우는 number of node generation (= network member changes)가 poisson distribution으로 새롭게 나오는 것. 
+
 논문에 추가할 새로운 아이디어들
 * explore vs exploit : epsilon값을 constant로 주는 or decay되는 셋팅 --> 이론적인 startegy를 적용 ex) UCB, tomson's sampling 
 --> 처음에는 가져다 쓰는것 만으로 ok. best will be 우리 상황에 optimal한 방법을 proof 해주는 것
