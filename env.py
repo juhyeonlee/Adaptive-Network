@@ -30,7 +30,7 @@ class Environment:
         self.beta_matrix = None
 
         # reward parameters
-        self.utility_coeff = 0.05
+        self.utility_coeff = 0.95
         self.utility_pos_coeff = 0.1 # to make utiltiy to be positive
 
         # default coordination for each block
@@ -99,7 +99,7 @@ class Environment:
         print("connectivity ratio: ", connectivity_ratio)
         print("goodput: ", goodput)
         #TODO: constant for positive value
-        reward = goodput - action * self.utility_coeff
+        reward = goodput * self.utility_coeff - action * (1.0 - self.utility_coeff)
 
         # next state
         #TODO: only change node location

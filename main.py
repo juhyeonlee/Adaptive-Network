@@ -38,7 +38,6 @@ if __name__ == '__main__':
         for steps in range(ep_length):
             for i in range(len(state) - 4):
                 action[i] = agent[i].get_action(state[i])
-            # real_action = action - 3 # [0,6] --> [-3, 3]
             next_state, reward, goodput = env.step(action)
 
             for i in range(len(state) - 4):
