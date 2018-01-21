@@ -1,3 +1,13 @@
+2018/1/21 Conference call
+
+논문에 추가할 새로운 아이디어들
+* explore vs exploit : epsilon값을 constant로 주는 or decay되는 셋팅 --> 이론적인 startegy를 적용 ex) UCB, tomson's sampling 
+--> 처음에는 가져다 쓰는것 만으로 ok. best will be 우리 상황에 optimal한 방법을 proof 해주는 것
+* multi agent reinforcement learning 
+* member change 상황에서 new member나 사라진 멤버들을 어떻게 처리할지에 대한 방법 제안. 
+
+
+
 2018/1/8 conference call
 * discussion 내용: 구현 중 Q&A
 
