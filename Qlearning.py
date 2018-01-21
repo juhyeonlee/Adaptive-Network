@@ -6,13 +6,13 @@ import random
 
 class QLearningAgent:
     def __init__(self, n_actions):
-        # actions = [-3, -2, -1, 0, 1, 2, 3]
+        # actions = [1, 2, 3, 4, 5, 6]
         self.n_actions = n_actions
         self.learning_rate = 0.01
         self.discount_factor = 0.9
         self.epsilon_start = 1.0
         self.epsilon_end = 0.1
-        self.epislon_step = 800
+        self.epislon_step = 100
         self.q_table = defaultdict(lambda: [0.0] * self.n_actions)
         self.count = 0
 
@@ -29,7 +29,6 @@ class QLearningAgent:
     # agent pick action of epsilon-greedy policy
     def get_action(self, state):
         epsilon = max(self.epsilon_end, self.epsilon_start - float(self.count) / float(self.epislon_step))
-        print(epsilon)
         if np.random.rand() < epsilon:
             # take random action
             action = np.random.choice(self.n_actions)

@@ -30,7 +30,7 @@ class Environment:
         self.beta_matrix = None
 
         # reward parameters
-        self.utility_coeff = 0.1
+        self.utility_coeff = 0.05
         self.utility_pos_coeff = 0.1 # to make utiltiy to be positive
 
         # default coordination for each block
@@ -88,13 +88,14 @@ class Environment:
             if dist[i] is not np.inf:
                 connectivity_ratio += 1.
         connectivity_ratio /= 4.
-        goodput = np.sum(np.divide(1, dist))
+        goodput = np.sum(np.divide(1., dist))
         print("connectivity ratio: ", connectivity_ratio)
         print("goodput: ", goodput)
         #TODO: constant for positive value
         reward = goodput - action * self.utility_coeff
 
         # next state
+        #TODO: only change node location
         # change node location
         self.coords = []
         for block in range(self.max_block):
