@@ -30,12 +30,12 @@ if __name__ == '__main__':
         beta = 0.0 # random.uniform(0.0, 0.3)
         state = env.reset(beta, init_txr)
         agent = []
-        for i in range(len(state)):
+        for i in range(len(state) - 4):
             agent.append(QLearningAgent(n_actions))
         action = np.zeros(len(state), dtype=np.int32)
         goodput_trace = []
         for steps in range(ep_length):
-            for i in range(len(state)):
+            for i in range(len(state) - 4):
                 action[i] = agent[i].get_action(state[i])
             # real_action = action - 3 # [0,6] --> [-3, 3]
             next_state, reward, goodput = env.step(action)

@@ -12,8 +12,8 @@ class Environment:
         self.mu = mu # node density
         self.beta = 0.0
         self.init_txr = init_txr
-        self.txr = init_txr
-        self.action_space = [0, 1, 2, 3, 4, 5, 6] #[-3, -2, -1, 0, 1, 2, 3]
+        self.txr = None
+        self.action_space = [-3, -2, -1, 0, 1, 2, 3]
         self.n_actions = len(self.action_space)
 
         # node state
@@ -41,7 +41,14 @@ class Environment:
                 i += 1
 
     def step(self, action):
-        self.txr = action #self.last_txr + action
+        self.txr = self.last_txr + action
+        # txr is between 0 and 6
+        for i in range(len(self.txr)):
+            if self.txr[i] < 0:
+                self.txr[i] = 0
+            elif self.txr[i] > 6:
+                self.txr[i] = 6
+
         self.last_txr = self.txr
         print("action: ", action)
 

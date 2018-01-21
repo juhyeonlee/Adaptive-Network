@@ -36,12 +36,14 @@ class QLearningAgent:
             # take action according to the q function table
             state_action = self.q_table[state]
             action = self.arg_max(state_action)
+        action = action - 3
         self.count += 1
         return action
 
     def get_greedy_action(self, state):
         state_action = self.q_table[state]
         action = self.arg_max(state_action)
+        action  = action - 3
         return action
 
     @staticmethod
