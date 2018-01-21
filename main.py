@@ -19,8 +19,8 @@ if __name__ == '__main__':
     n_actions = env.n_actions
 
 
-    ep_length = 300
-    num_ep = 100
+    ep_length = 1000
+    num_ep = 1
     sum_goodput = 0.
     sum_reward = 0.
 
@@ -34,29 +34,34 @@ if __name__ == '__main__':
             agent.append(QLearningAgent(n_actions))
         action = np.zeros(len(state), dtype=np.int32)
         goodput_trace = []
+        reward_trace = []
         for steps in range(ep_length):
             for i in range(len(state) - 4):
                 action[i] = agent[i].get_action(state[i])
             # real_action = action - 3 # [0,6] --> [-3, 3]
             next_state, reward, goodput = env.step(action)
 
-            for i in range(len(state)):
+            for i in range(len(state) - 4):
                 agent[i].learn(state[i], action[i], reward[i], next_state[i])
 
             goodput_trace.append(goodput)
+            reward_trace.append(np.mean(reward))
             state = next_state
 
-        # plt.plot(range(ep_length), goodput_trace)
-        # plt.show()
+        plt.plot(range(ep_length), goodput_trace)
+        plt.show()
+        plt.plot(range(ep_length), reward_trace)
+        plt.show()
 
         # for i in range(len(state)):
         #     agent[i].print_qtable()
         # test
-        for i in range(len(state)):
+        for i in range(len(state) - 4):
             action[i] = agent[i].get_greedy_action(state[i])
         next_state, reward, goodput = env.step(action)
         sum_goodput += goodput
         sum_reward += np.sum(reward)
+        print(env.txr)
 
     print('average goodput: ', sum_goodput / num_ep, 'average reward :', sum_reward / num_ep)
 
