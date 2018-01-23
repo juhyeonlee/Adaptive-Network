@@ -1,7 +1,7 @@
 
 import random
 import numpy as np
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 from env import Environment
 from Qlearning import QLearningAgent
@@ -11,7 +11,7 @@ if __name__ == '__main__':
     # init parameters
     one_dim = 7
     mu = 4 / 5
-    init_txr = 3
+    init_txr = 2
     # random_seed = 1 #??
 
     env = Environment(one_dim, mu, init_txr)
@@ -20,7 +20,7 @@ if __name__ == '__main__':
     action_space = env.action_space
 
 
-    ep_length = 10
+    ep_length = 100
     num_ep = 1
     sum_goodput = 0.
     sum_reward = 0.
@@ -33,13 +33,13 @@ if __name__ == '__main__':
         agent = []
         for i in range(len(state) - 4):
             agent.append(QLearningAgent(action_space))
-        action = np.zeros(len(state), dtype=np.int32)
+        action = np.zeros(len(state), dtype=np.float32)
         goodput_trace = []
         reward_trace = []
         for steps in range(ep_length):
             for i in range(len(state) - 4):
-                action[i] = agent[i].get_action_idx(state[i])
-                #action[i] = agent[i].get_action(state[i])
+                action[i] = agent[i].get_action(state[i])
+            #print('action check:',action)
             next_state, reward, goodput = env.step(action)
 
             for i in range(len(state) - 4):
@@ -49,10 +49,8 @@ if __name__ == '__main__':
             reward_trace.append(np.mean(reward))
             state = next_state
 
-        #plt.plot(range(ep_length), goodput_trace)
-        #plt.show()
-        #plt.plot(range(ep_length), reward_trace)
-        #plt.show()
+
+
 
         # for i in range(len(state)):
         #     agent[i].print_qtable()
@@ -66,5 +64,18 @@ if __name__ == '__main__':
 
     print('goodput trace: ', goodput_trace)
     print('reward trace :', reward_trace)
+
+    plt.figure(0)
+    plt.plot(range(ep_length), goodput_trace,'*')
+    plt.xlabel('episode')
+    plt.ylabel('goodput')
+    # plt.show()
+
+    plt.figure(1)
+    plt.plot(range(ep_length), reward_trace,'+')
+    plt.xlabel('episode')
+    plt.ylabel('reward')
+    plt.show()
+
     #print('average goodput: ', sum_goodput / num_ep, 'average reward :', sum_reward / num_ep)
 

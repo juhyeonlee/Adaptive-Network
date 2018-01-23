@@ -2,7 +2,7 @@
 import numpy as np
 import networkx as nx
 
-#import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 
 
 class Environment:
@@ -31,7 +31,7 @@ class Environment:
         self.beta_matrix = None
 
         # reward parameters
-        self.utility_coeff = 0.7 # weight on goodput
+        self.utility_coeff = 0.95 # weight on goodput
         self.utility_pos_coeff = 0.1 # to make utiltiy to be positive
 
         # default coordination for each block
