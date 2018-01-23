@@ -9,7 +9,7 @@ from Qlearning import QLearningAgent
 if __name__ == '__main__':
 
     # init parameters
-    one_dim = 5
+    one_dim = 7
     mu = 4 / 5
     init_txr = 3
     # random_seed = 1 #??
@@ -17,6 +17,7 @@ if __name__ == '__main__':
     env = Environment(one_dim, mu, init_txr)
 
     n_actions = env.n_actions
+    action_space = env.action_space
 
 
     ep_length = 10
@@ -31,13 +32,14 @@ if __name__ == '__main__':
         state = env.reset(beta, init_txr)
         agent = []
         for i in range(len(state) - 4):
-            agent.append(QLearningAgent(n_actions))
+            agent.append(QLearningAgent(action_space))
         action = np.zeros(len(state), dtype=np.int32)
         goodput_trace = []
         reward_trace = []
         for steps in range(ep_length):
             for i in range(len(state) - 4):
-                action[i] = agent[i].get_action(state[i])
+                action[i] = agent[i].get_action_idx(state[i])
+                #action[i] = agent[i].get_action(state[i])
             next_state, reward, goodput = env.step(action)
 
             for i in range(len(state) - 4):
@@ -47,10 +49,10 @@ if __name__ == '__main__':
             reward_trace.append(np.mean(reward))
             state = next_state
 
-        plt.plot(range(ep_length), goodput_trace)
-        plt.show()
-        plt.plot(range(ep_length), reward_trace)
-        plt.show()
+        #plt.plot(range(ep_length), goodput_trace)
+        #plt.show()
+        #plt.plot(range(ep_length), reward_trace)
+        #plt.show()
 
         # for i in range(len(state)):
         #     agent[i].print_qtable()
@@ -60,7 +62,9 @@ if __name__ == '__main__':
         next_state, reward, goodput = env.step(action)
         sum_goodput += goodput
         sum_reward += np.sum(reward)
-        print(env.txr)
+        print('greedy approach - TX range: ',env.txr)
 
-    print('average goodput: ', sum_goodput / num_ep, 'average reward :', sum_reward / num_ep)
+    print('goodput trace: ', goodput_trace)
+    print('reward trace :', reward_trace)
+    #print('average goodput: ', sum_goodput / num_ep, 'average reward :', sum_reward / num_ep)
 

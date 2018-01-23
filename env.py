@@ -13,7 +13,8 @@ class Environment:
         self.beta = 0.0
         self.init_txr = init_txr
         self.txr = None
-        self.action_space = [-3, -2, -1, 0, 1, 2, 3]
+#        self.action_space = [-3, -2, -1, 0, 1, 2, 3]
+        self.action_space = [-1,-0.75, -0.5,-0.25, 0,0.25, 0.5, 0.75, 1]
         self.n_actions = len(self.action_space)
 
         # node state
@@ -30,7 +31,7 @@ class Environment:
         self.beta_matrix = None
 
         # reward parameters
-        self.utility_coeff = 0.95
+        self.utility_coeff = 0.7 # weight on goodput
         self.utility_pos_coeff = 0.1 # to make utiltiy to be positive
 
         # default coordination for each block
@@ -48,9 +49,9 @@ class Environment:
                 self.txr[i] = 0
             elif self.txr[i] > 6:
                 self.txr[i] = 6
-
         self.last_txr = self.txr
         print("action: ", action)
+        print("updated TX range: ", self.txr)
 
         # adjacent matrix
         self.adj_matrix = np.zeros((self.num_node, self.num_node))
@@ -173,6 +174,7 @@ class Environment:
 
         self.num_players = len(self.players)
         print("num of players: ", self.num_players)
+        print("players index: ", self.players)
 
         for b in range(self.max_block):
             for n in range(self.no_events[b]):
