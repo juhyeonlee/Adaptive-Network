@@ -2,7 +2,7 @@
 import numpy as np
 import networkx as nx
 
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 
 class Environment:
@@ -98,6 +98,7 @@ class Environment:
         goodput = np.sum(np.divide(1., dist))
         print("connectivity ratio: ", connectivity_ratio)
         print("goodput: ", goodput)
+        print("=======================")
         #TODO: constant for positive value
         reward = goodput * self.utility_coeff - action * (1.0 - self.utility_coeff)
 

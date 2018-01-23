@@ -1,7 +1,7 @@
 
 import random
 import numpy as np
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 from env import Environment
 from Qlearning import QLearningAgent
@@ -19,7 +19,7 @@ if __name__ == '__main__':
     n_actions = env.n_actions
 
 
-    ep_length = 1000
+    ep_length = 10
     num_ep = 1
     sum_goodput = 0.
     sum_reward = 0.
