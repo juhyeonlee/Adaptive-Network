@@ -22,7 +22,7 @@ class QLearningAgent:
     def learn(self, state, action, reward, next_state):
         #TODO: dimension이 next state 에서 달라짐 왜냐면 agent 각각이 소멸되니까? 그러면 각각의 player의 node 번호를 기억했다가 걔네들을 trace 해야되는건가? player수도 가변적임..
         #TODO: multi-arm bandit의 가까운 문제인건가?
-        action_idx= self.action_space.index(action)
+        action_idx = self.action_space.index(str(action))
         current_q = self.q_table[state][action_idx]
         # using Bellman Optimality Equation to update q function
         new_q = reward + self.discount_factor * max(self.q_table[next_state])
@@ -41,8 +41,8 @@ class QLearningAgent:
             state_action = self.q_table[state]
             action_idx = self.arg_max(state_action)
             #print('arg_max result-action_idx:',action_idx) # for checking arg_max function
-        action = self.action_space[action_idx]
-        #print('corresponding action:', action)
+        action = float(self.action_space[action_idx])
+        # print('corresponding action:', action)
         #action = action - 3
         self.count += 1
         return action
