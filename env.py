@@ -6,15 +6,15 @@ import matplotlib.pyplot as plt
 
 
 class Environment:
-    def __init__(self, dims, mu, init_txr):
+    def __init__(self, dims, mu, init_txr, utility_coeff, utility_pos_coeff, action_space):
         self.one_dim = dims
         self.max_block = self.one_dim ** 2
         self.mu = mu # node density
         self.beta = 0.0
         self.init_txr = init_txr
         self.txr = None
-#        self.action_space = [-3, -2, -1, 0, 1, 2, 3]
-        self.action_space = [-1,-0.75, -0.5,-0.25, 0,0.25, 0.5, 0.75, 1]
+        #self.action_space = [-3, -2, -1, 0, 1, 2, 3]
+        self.action_space =action_space
         self.n_actions = len(self.action_space)
 
         # node state
@@ -31,8 +31,8 @@ class Environment:
         self.beta_matrix = None
 
         # reward parameters
-        self.utility_coeff = 0.95 # weight on goodput
-        self.utility_pos_coeff = 0.1 # to make utiltiy to be positive
+        self.utility_coeff = utility_coeff # weight on goodput
+        self.utility_pos_coeff = utility_pos_coeff # to make utiltiy to be positive
 
         # default coordination for each block
         i = 0
@@ -52,6 +52,7 @@ class Environment:
         self.last_txr = self.txr
         print("action: ", action)
         print("updated TX range: ", self.txr)
+        energy = self.txr **2
 
         # adjacent matrix
         self.adj_matrix = np.zeros((self.num_node, self.num_node))
@@ -101,7 +102,9 @@ class Environment:
         print("goodput: ", goodput)
         print("=======================")
         #TODO: constant for positive value
-        reward = goodput * self.utility_coeff - action * (1.0 - self.utility_coeff)
+        #reward = goodput * self.utility_coeff - action * (1.0 - self.utility_coeff)
+        #reward = self.utility_pos_coeff +connectivity_ratio * ( goodput * self.utility_coeff - action)
+        reward = self.utility_pos_coeff + goodput * self.utility_coeff - action
 
         # next state
         #TODO: only change node location
@@ -126,7 +129,7 @@ class Environment:
 
         # distance matrix
         self.num_node = len(self.node_loc)
-        print("num of nodes: ", self.num_node)
+        #print("num of nodes: ", self.num_node)
 
         self.d = np.zeros((self.num_node, self.num_node))
         for f in range(self.num_node):
@@ -147,7 +150,7 @@ class Environment:
         for i in range(self.num_players + 4):
             self.current_state[i] = np.sum(self.adj_matrix[pp[i]])
 
-        return self.current_state, reward, goodput
+        return self.current_state, reward, goodput, energy
 
     def reset(self, beta, init_txr):
         self.beta = beta

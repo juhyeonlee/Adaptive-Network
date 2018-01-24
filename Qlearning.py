@@ -14,7 +14,7 @@ class QLearningAgent:
         self.discount_factor = 0.7
         self.epsilon_start = 1.0
         self.epsilon_end = 0.1
-        self.epislon_step = 500
+        self.epislon_step =100 # 500
         self.q_table = defaultdict(lambda: [0.0] * self.n_actions)
         self.count = 0
 
@@ -30,8 +30,9 @@ class QLearningAgent:
 
     # get action for the state according to the q function table
     # agent pick action of epsilon-greedy policy
-    def get_action(self, state):
-        epsilon = 0.4 #max(self.epsilon_end, self.epsilon_start - float(self.count) / float(self.epislon_step))
+    def get_action(self, state, epsilon):
+        #epsilon = 0.4 #
+        #epsilon =  max(self.epsilon_end, self.epsilon_start - float(self.count) / float(self.epislon_step))
         if np.random.rand() < epsilon:
             # take random action
             action_idx = np.random.choice(self.n_actions)

@@ -8,22 +8,34 @@ from Qlearning import QLearningAgent
 
 if __name__ == '__main__':
 
-    # init parameters
+    #plt.close('all')
+    ########### tuning parameters #########
     one_dim = 7
     mu = 4 / 5
     init_txr = 2
     # random_seed = 1 #??
+    epsilon = 0.4 # explore ratio
+    utility_coeff = 2 #0.95  # weight on goodput
+    utility_pos_coeff = 1  # to make reward to be positive
 
-    env = Environment(one_dim, mu, init_txr)
+    action_space = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1]
+    #action_space = [i * 0.1 for i in range(-10, 11)]
+        #[-1.00, -0.90, -0.80, -0.70, -0.60, -0.50, -0.40, -0.30, -0.20, -0.10, 0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00]
+    ep_length = 50
+    ########################
+
+    num_ep = 1
+    sum_goodput = 0.
+    sum_reward = 0.
+
+    env = Environment(one_dim, mu, init_txr, utility_coeff, utility_pos_coeff, action_space)
 
     n_actions = env.n_actions
     action_space = env.action_space
 
 
-    ep_length = 100
-    num_ep = 1
-    sum_goodput = 0.
-    sum_reward = 0.
+
+
 
 
     for episode in range(num_ep):
@@ -36,17 +48,20 @@ if __name__ == '__main__':
         action = np.zeros(len(state), dtype=np.float32)
         goodput_trace = []
         reward_trace = []
+        energy_trace = []
         for steps in range(ep_length):
+            print('step number: ,', steps)
             for i in range(len(state) - 4):
-                action[i] = agent[i].get_action(state[i])
+                action[i] = agent[i].get_action(state[i],epsilon)
             #print('action check:',action)
-            next_state, reward, goodput = env.step(action)
+            next_state, reward, goodput, energy = env.step(action)
 
             for i in range(len(state) - 4):
                 agent[i].learn(state[i], action[i], reward[i], next_state[i])
 
             goodput_trace.append(goodput)
             reward_trace.append(np.mean(reward))
+            energy_trace.append(np.sum(energy))
             state = next_state
 
 
@@ -54,13 +69,14 @@ if __name__ == '__main__':
 
         # for i in range(len(state)):
         #     agent[i].print_qtable()
+
         # test
-        for i in range(len(state) - 4):
-            action[i] = agent[i].get_greedy_action(state[i])
-        next_state, reward, goodput = env.step(action)
-        sum_goodput += goodput
-        sum_reward += np.sum(reward)
-        print('greedy approach - TX range: ',env.txr)
+     #   for i in range(len(state) - 4):
+     #       action[i] = agent[i].get_greedy_action(state[i])
+     #   next_state, reward, goodput = env.step(action)
+     #   sum_goodput += goodput
+     #   sum_reward += np.sum(reward)
+     #   print('greedy approach - TX range: ',env.txr)
 
     print('goodput trace: ', goodput_trace)
     print('reward trace :', reward_trace)
@@ -69,9 +85,16 @@ if __name__ == '__main__':
     plt.plot(range(ep_length), goodput_trace,'*')
     plt.xlabel('episode')
     plt.ylabel('goodput')
-    # plt.show()
+    #plt.show()
 
     plt.figure(1)
+    plt.plot(range(ep_length), energy_trace,'+')
+    plt.xlabel('episode')
+    plt.ylabel('energy sum')
+    plt.show()
+
+
+    plt.figure(2)
     plt.plot(range(ep_length), reward_trace,'+')
     plt.xlabel('episode')
     plt.ylabel('reward')
