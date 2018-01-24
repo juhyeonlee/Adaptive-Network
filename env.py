@@ -14,7 +14,7 @@ class Environment:
         self.init_txr = init_txr
         self.txr = None
         #self.action_space = [-3, -2, -1, 0, 1, 2, 3]
-        self.action_space =action_space
+        self.action_space = action_space
         self.n_actions = len(self.action_space)
 
         # node state
@@ -52,7 +52,7 @@ class Environment:
         self.last_txr = self.txr
         print("action: ", action)
         print("updated TX range: ", self.txr)
-        energy = self.txr **2
+        energy = self.txr ** 2
 
         # adjacent matrix
         self.adj_matrix = np.zeros((self.num_node, self.num_node))

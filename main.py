@@ -18,8 +18,8 @@ if __name__ == '__main__':
     utility_coeff = 2 #0.95  # weight on goodput
     utility_pos_coeff = 1  # to make reward to be positive
 
-    action_space = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1]
-    #action_space = [i * 0.1 for i in range(-10, 11)]
+    # action_space = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1]
+    action_space = ["%.1f" % round(i * 0.1, 1) for i in range(-10, 11)]
         #[-1.00, -0.90, -0.80, -0.70, -0.60, -0.50, -0.40, -0.30, -0.20, -0.10, 0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00]
     ep_length = 50
     ########################
@@ -52,8 +52,8 @@ if __name__ == '__main__':
         for steps in range(ep_length):
             print('step number: ,', steps)
             for i in range(len(state) - 4):
-                action[i] = agent[i].get_action(state[i],epsilon)
-            #print('action check:',action)
+                action[i] = agent[i].get_action(state[i], epsilon)
+            # print('action check:', action)
             next_state, reward, goodput, energy = env.step(action)
 
             for i in range(len(state) - 4):
