@@ -23,7 +23,7 @@ if __name__ == '__main__':
     # action_space = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1]
     action_space = ["%.1f" % round(i * 0.1, 1) for i in range(-10, 11)]
         #[-1.00, -0.90, -0.80, -0.70, -0.60, -0.50, -0.40, -0.30, -0.20, -0.10, 0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00]
-    ep_length = 10
+    ep_length = 8000
     ########################
 
     num_ep = 1
@@ -38,9 +38,9 @@ if __name__ == '__main__':
 
 
 
-    goodput_trace=np.zeros((10, ep_length),dtype=float)
-    energy_trace=np.zeros((10, ep_length),dtype=float)
-    reward_trace=np.zeros((10, ep_length),dtype=float)
+    goodput_trace=np.zeros((11, ep_length),dtype=float)
+    energy_trace=np.zeros((11, ep_length),dtype=float)
+    reward_trace=np.zeros((11, ep_length),dtype=float)
 
     t = time() # for checking processing time
     for epsilon_id in epsilon_space_id:
@@ -93,14 +93,14 @@ if __name__ == '__main__':
 
 
     plt.figure(0)
-    legend_set = [epsilon_id*0.1 for epsilon_id in epsilon_space_id]
+    legend_set = ["%.2f" % (epsilon_id*0.10) for epsilon_id in epsilon_space_id]
     plt.xlabel('episode')
     plt.ylabel('goodput')
     plt.grid()
     for epsilon_id in epsilon_space_id:
         plt.plot(range(ep_length), goodput_trace[epsilon_id,:],'-*')
     plt.legend(legend_set)
-    plt.show()
+    #plt.show()
 
     plt.figure(1)
     #plt.plot(range(ep_length), energy_trace,'+')
@@ -110,7 +110,7 @@ if __name__ == '__main__':
     for epsilon_id in epsilon_space_id:
         plt.plot(range(ep_length), energy_trace[epsilon_id, :], '-*')
     plt.legend(legend_set)
-    plt.show()
+    #plt.show()
 
 
     plt.figure(2)
