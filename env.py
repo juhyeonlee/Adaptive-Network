@@ -104,7 +104,8 @@ class Environment:
         #TODO: constant for positive value
         #reward = goodput * self.utility_coeff - action * (1.0 - self.utility_coeff)
         #reward = self.utility_pos_coeff +connectivity_ratio * ( goodput * self.utility_coeff - action)
-        reward = self.utility_pos_coeff + goodput * self.utility_coeff - action
+        reward = self.utility_pos_coeff + 2*connectivity_ratio + (goodput * self.utility_coeff - action)
+        #reward = self.utility_pos_coeff + goodput * self.utility_coeff - action
 
         # next state
         #TODO: only change node location

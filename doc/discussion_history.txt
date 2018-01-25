@@ -1,4 +1,14 @@
 
+2018/01/25
+
+* epsilon의 최적값을 보기 위해 main_v2.py 코드 짜 놓음
+* 주현이는 deep RL 구현?
+
+* 추가 연구 포인트 *
+- epsilon decay에 대한 리서치를 하는 것이 좋은지?
+- goodput과 energy 사이의 trade-off를 보여줄 만한 내용있는지? --> utility_coeff를 사용하는 방법?
+
+=====================
 2018/01/24
 
 * 민혜생각의 현재의 최적 parameter
@@ -11,7 +21,7 @@ action_space = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1]
     utility_coeff = 2 #0.95  # weight on goodput
     utility_pos_coeff = 1  # to make reward to be positive
 
-* goodput과 energy 사이의 trade-off를 보여줄 만한 내용있는지? --> utility_coeff를 사용하는 방법?
+
 
 ======================
 2018/1/21 off-line meeting
