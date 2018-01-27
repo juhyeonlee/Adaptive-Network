@@ -2,6 +2,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
+import os
 
 from env import Environment
 from DQN import DQNAgent
@@ -43,6 +44,13 @@ if __name__ == '__main__':
     tf.reset_default_graph()
     sess = tf.Session()
 
+    if not os.path.exists('./train'):
+        os.makedirs('./train')
+    if not os.path.exists('./model'):
+        os.makedirs('./model')
+
+    summary = tf.summary.FileWriter('./train')
+
 
     for episode in range(num_ep):
         # TODO: firstly set to 0, then specified particular distributions for link failure rate
@@ -70,6 +78,8 @@ if __name__ == '__main__':
             goodput_trace.append(goodput)
             reward_trace.append(np.mean(reward))
             energy_trace.append(np.sum(energy))
+            # TODO: using tensorboard graph for visualization
+
             state = next_state
 
         # test

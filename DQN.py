@@ -4,7 +4,8 @@ import numpy as np
 from tensorflow.contrib.layers.python.layers import initializers
 
 
-class DQNAgent():
+# TODO: train & load implement
+class DQNAgent:
     def __init__(self, sess, n_state, action_space, discount_factor, agent_num, epsilon, lr):
 
         self.sess = sess
@@ -16,6 +17,7 @@ class DQNAgent():
         self.epsilon_end = epsilon['epsilon_end']
         self.epsilon_step = epsilon['epsilon_step']
         self.count = 0
+        save = tf.train.Saver()
 
         with tf.variable_scope("node_"+str(agent_num)):
 
