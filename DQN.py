@@ -17,7 +17,6 @@ class DQNAgent:
         self.epsilon_end = epsilon['epsilon_end']
         self.epsilon_step = epsilon['epsilon_step']
         self.count = 0
-        save = tf.train.Saver()
 
         with tf.variable_scope("node_"+str(agent_num)):
 
