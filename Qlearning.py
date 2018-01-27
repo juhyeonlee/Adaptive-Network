@@ -14,7 +14,7 @@ class QLearningAgent:
         self.discount_factor = 0.7
         self.epsilon_start = 1.0
         self.epsilon_end = 0.1
-        self.epislon_step =100 # 500
+        self.epislon_step = 100 # 500
         self.q_table = defaultdict(lambda: [0.0] * self.n_actions)
         self.count = 0
 
@@ -51,7 +51,7 @@ class QLearningAgent:
         state_action = self.q_table[state]
         action_idx = self.arg_max(state_action)
         #action  = action - 3
-        action = self.action_space[action_idx]
+        action = float(self.action_space[action_idx])
         return action
 
     @staticmethod

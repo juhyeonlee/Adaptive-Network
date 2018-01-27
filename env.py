@@ -62,11 +62,6 @@ class Environment:
         for i in range(self.num_node):
             self.adj_matrix[i, i] = 1
 
-        # TODO: not including source and terminal nodes??
-        self.current_state = np.zeros(self.num_players)
-        for i in range(self.num_players):
-            self.current_state[i] = np.sum(self.adj_matrix[self.players[i]])
-
         G = nx.DiGraph()
         for i in range(self.num_node):
             G.add_node(i)
@@ -102,10 +97,12 @@ class Environment:
         print("goodput: ", goodput)
         print("=======================")
         #TODO: constant for positive value
-        #reward = goodput * self.utility_coeff - action * (1.0 - self.utility_coeff)
-        #reward = self.utility_pos_coeff +connectivity_ratio * ( goodput * self.utility_coeff - action)
-        reward = self.utility_pos_coeff + goodput * self.utility_coeff - action
-
+        # reward = goodput  - action * (0.4)
+        # reward = self.utility_pos_coeff +connectivity_ratio * ( goodput * self.utility_coeff - action)
+        # reward = self.utility_pos_coeff + goodput * self.utility_coeff - action
+        reward = (self.utility_pos_coeff + 2 * connectivity_ratio + (goodput * self.utility_coeff - action))
+        reward = reward / 10.  # rescaling reward to train NN stable
+        print("reward: ", reward)
         # next state
         #TODO: only change node location
         # change node location
