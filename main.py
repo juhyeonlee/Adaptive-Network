@@ -14,14 +14,14 @@ if __name__ == '__main__':
     mu = 4 / 5
     init_txr = 2
     # random_seed = 1 #??
-    epsilon = 0.4 # explore ratio
-    utility_coeff = 2 #0.95  # weight on goodput
-    utility_pos_coeff = 1  # to make reward to be positive
+    epsilon = 0.2 # explore ratio
+    utility_coeff = 3 #0.95  # weight on goodput
+    utility_pos_coeff = 0  # to make reward to be positive
 
     # action_space = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1]
     action_space = ["%.1f" % round(i * 0.1, 1) for i in range(-10, 11)]
         #[-1.00, -0.90, -0.80, -0.70, -0.60, -0.50, -0.40, -0.30, -0.20, -0.10, 0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00]
-    ep_length = 50
+    ep_length = 10000
     ########################
 
     num_ep = 1
@@ -44,7 +44,7 @@ if __name__ == '__main__':
         state = env.reset(beta, init_txr)
         agent = []
         for i in range(len(state) - 4):
-            agent.append(QLearningAgent(action_space))
+            agent.append(QLearningAgent(action_space, ep_length))
         action = np.zeros(len(state), dtype=np.float32)
         goodput_trace = []
         reward_trace = []
@@ -52,7 +52,7 @@ if __name__ == '__main__':
         for steps in range(ep_length):
             print('step number: ,', steps)
             for i in range(len(state) - 4):
-                action[i] = agent[i].get_action(state[i], epsilon)
+                action[i] = agent[i].get_action(state[i], epsilon, steps)
             # print('action check:', action)
             next_state, reward, goodput, energy = env.step(action)
 

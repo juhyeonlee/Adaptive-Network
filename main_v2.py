@@ -15,15 +15,15 @@ if __name__ == '__main__':
     mu = 4 / 5
     init_txr = 2
     # random_seed = 1 #??
-    epsilon = 0.4 # explore ratio
-    epsilon_space_id = range(0,11)
+    #epsilon = 0.4 # explore ratio
+    epsilon_space_id = range(0,11,2) # explore ratio
     utility_coeff = 3 #0.95  # weight on goodput
-    utility_pos_coeff = 1  # to make reward to be positive
+    utility_pos_coeff = 10  # to make reward to be positive
 
     # action_space = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1]
     action_space = ["%.1f" % round(i * 0.1, 1) for i in range(-10, 11)]
         #[-1.00, -0.90, -0.80, -0.70, -0.60, -0.50, -0.40, -0.30, -0.20, -0.10, 0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00]
-    ep_length = 8000
+    ep_length = 100
     ########################
 
     num_ep = 1
@@ -45,6 +45,7 @@ if __name__ == '__main__':
     t = time() # for checking processing time
     for epsilon_id in epsilon_space_id:
         epsilon = epsilon_id * 0.1
+        print('epsilon =',epsilon)
         for episode in range(num_ep):
             # TODO: firstly set to 0, then specified particular distributions for link failure rate
             beta = 0.0 # random.uniform(0.0, 0.3)
@@ -73,9 +74,9 @@ if __name__ == '__main__':
 
 
 
-        print('goodput trace: ', goodput_trace[epsilon_id,:])
-        print('reward trace :', reward_trace[epsilon_id,:])
-        print('energy trace :', energy_trace[epsilon_id,:])
+        #print('goodput trace: ', goodput_trace[epsilon_id,:])
+        #print('reward trace :', reward_trace[epsilon_id,:])
+        #print('energy trace :', energy_trace[epsilon_id,:])
 
     print('processing time:', time()-t)
 
@@ -90,7 +91,7 @@ if __name__ == '__main__':
      #   sum_reward += np.sum(reward)
      #   print('greedy approach - TX range: ',env.txr)
 
-
+    #epsilon_space_id = [0, 1, 3, 10]
 
     plt.figure(0)
     legend_set = ["%.2f" % (epsilon_id*0.10) for epsilon_id in epsilon_space_id]
@@ -98,7 +99,7 @@ if __name__ == '__main__':
     plt.ylabel('goodput')
     plt.grid()
     for epsilon_id in epsilon_space_id:
-        plt.plot(range(ep_length), goodput_trace[epsilon_id,:],'-*')
+        plt.plot(range(ep_length), goodput_trace[epsilon_id,:],'*')
     plt.legend(legend_set)
     #plt.show()
 
@@ -125,3 +126,20 @@ if __name__ == '__main__':
 
     #print('average goodput: ', sum_goodput / num_ep, 'average reward :', sum_reward / num_ep)
 
+    np.savetxt('result_goodput.txt',goodput_trace)
+    np.savetxt('result_energy.txt', energy_trace)
+
+    from tempfile import TemporaryFile
+    outfile = TemporaryFile()
+
+    np.savez(outfile, epsilon_space_id, goodput_trace, reward_trace, energy_trace )
+
+
+
+    #import dill  # pip install dill --user
+
+    #filename = 'globalsave.pkl'
+    #dill.dump_session(filename)
+
+    # and to load the session again:
+    #dill.load_session(filename)

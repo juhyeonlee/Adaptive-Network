@@ -50,8 +50,9 @@ class Environment:
             elif self.txr[i] > 6:
                 self.txr[i] = 6
         self.last_txr = self.txr
-        print("action: ", action)
-        print("updated TX range: ", self.txr)
+
+        #print("action: ", action)
+        #print("updated TX range: ", self.txr)
         energy = self.txr ** 2
 
         # adjacent matrix
@@ -87,8 +88,8 @@ class Environment:
                     path.append([])
                     dist.append(np.inf)
 
-        print("path between sources and destinations: ", path)
-        print("distance: ", dist)
+        #print("path between sources and destinations: ", path)
+        #print("distance: ", dist)
 
         # calculate connectivity ratio and goodput
         # connectivity ratio: the number of connected path, max 1.0 (source 2 * dest 2 ) / 4
