@@ -145,7 +145,8 @@ class Environment:
         # TODO: including source and terminal nodes??
         self.current_state = np.zeros(self.num_players + 4)
         for i in range(self.num_players + 4):
-            self.current_state[i] = np.sum(self.adj_matrix[pp[i]])
+            self.current_state[i] = np.sum(self.adj_matrix[pp[i]]) / 100.
+            # self.current_state[i][1] = self.txr[i] / 6.0
 
         return self.current_state, reward, goodput, energy
 
@@ -209,7 +210,8 @@ class Environment:
         #TODO: including source and terminal nodes??
         self.current_state = np.zeros(self.num_players + 4)
         for i in range(self.num_players + 4):
-            self.current_state[i] = np.sum(self.adj_matrix[pp[i]])
+            self.current_state[i] = np.sum(self.adj_matrix[pp[i]]) / 100.
+            # self.current_state[i][1] = self.init_txr / 6.0
 
         # save current transmission range
         self.last_txr = np.ones((self.num_players + 4), dtype=np.int32) * self.init_txr
