@@ -1,0 +1,7 @@
+Robust network formation is difficult problem because of its dynamic characteristics.
+therefore networks are needed to adapt thier dynamic environment. adaptive stategies are needed to form stable connection through its changes. former analytic solution has some limitations.
+Recently, Deep Reinforcement learning achieves super human performance in serveral domain(minh, silver, ). In wireless network, the goal is transmit message from source to terminal through node.
+such nodes regarded as an agent. Therefore, network formation problem is one of multi-agent reinforment learning problem and the agents(node) cooperate to deliver the message from source to terminal node. each node transmit a message to another connected node. Only information node can know is the number of node connected to themselves and the range of their own transmission range. The agent has partial observabiliy of whole network state. 
+We formulated decentralized wireless network formation problems as partially observable multi-agent reinforcement learning setting. we trained adaptive network formation policies by using deep q network. the network node has their own DQN and trained to maximize whole network's goodput and simultaneously reduce cost of their transmission range
+
+To stabilize the training cuz by multi agent settting, we apply blahblah.    
