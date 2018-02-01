@@ -24,16 +24,16 @@ if __name__ == '__main__':
     action_space = ["%.1f" % round(i * 0.1, 1) for i in range(-10, 11)]
     #[-1.00, -0.90, -0.80, -0.70, -0.60, -0.50, -0.40, -0.30, -0.20, -0.10, 0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00]
 
-    ep_length = 25
+    ep_length = 300
 
     epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
-    beta_set = [0.0, 0.1, 0.2]  # 0.0  # random.uniform(0.0, 0.3)
+    beta_set = [0.0, 0.2, 0.4]  # 0.0  # random.uniform(0.0, 0.3)
 
     learning_rate = 0.01
     discount_factor = 0.7
     ########################
 
-    num_ep = 3
+    num_ep = 1
     sum_goodput = 0.
     sum_reward = 0.
 
@@ -61,8 +61,8 @@ if __name__ == '__main__':
 
         for episode in range(num_ep):
             # TODO: firstly set to 0, then specified particular distributions for link failure rate
-            beta = beta_set[episode]
-            state = env.reset(beta, init_txr)
+
+            state = env.reset(init_txr)
             agent = []
             for i in range(len(state) - 4):
                 agent.append(DQNAgent(sess, 1, action_space, discount_factor, i, epsilon, learning_rate))
@@ -72,10 +72,12 @@ if __name__ == '__main__':
             qvalue_trace = []
             for steps in range(ep_length):
                 print('step number: ,', steps)
+                beta_idx = steps//(ep_length/len(beta_set))
+                beta = beta_set[int(beta_idx)]
                 for i in range(len(state) - 4):
                     action[i], q_value[i] = agent[i].get_action(state[i])
                 # print('action check:', action)
-                next_state, reward, goodput, energy = env.step(action)
+                next_state, reward, goodput, energy = env.step(action, beta)
 
                 for i in range(len(state) - 4):
                     agent[i].learn(state[i], action[i], reward[i], next_state[i])
@@ -88,38 +90,38 @@ if __name__ == '__main__':
 
                 state = next_state
 
-        # test
-        #for i in range(len(state) - 4):
-        #    action[i] = agent[i].get_greedy_action(state[i])
-        #next_state, reward, goodput, energy = env.step(action)
-        #sum_goodput += goodput
-        #sum_reward += np.sum(reward)
-        #goodput_trace.append(goodput)
-        #reward_trace.append(np.mean(reward))
-        #energy_trace.append(np.sum(energy))
-        #print('greedy approach - TX range: ', env.txr)
+            # test
+            #for i in range(len(state) - 4):
+            #    action[i] = agent[i].get_greedy_action(state[i])
+            #next_state, reward, goodput, energy = env.step(action)
+            #sum_goodput += goodput
+            #sum_reward += np.sum(reward)
+            #goodput_trace.append(goodput)
+            #reward_trace.append(np.mean(reward))
+            #energy_trace.append(np.sum(energy))
+            #print('greedy approach - TX range: ', env.txr)
 
-        print('goodput trace: ', goodput_trace)
-        print('reward trace :', reward_trace)
+            print('goodput trace: ', goodput_trace)
+            print('reward trace :', reward_trace)
 
-        plt.figure(0)
-        plt.plot(range(num_ep*ep_length+1), goodput_trace,'-*')
-        plt.xlabel('episode')
-        plt.ylabel('goodput')
-        # plt.show()
+            plt.figure(0)
+            plt.plot(range(num_ep*ep_length), goodput_trace,'-*')
+            plt.xlabel('episode')
+            plt.ylabel('goodput')
+            # plt.show()
 
-        plt.figure(1)
-        plt.plot(range(num_ep*ep_length+1), energy_trace,'-+')
-        plt.xlabel('episode')
-        plt.ylabel('energy sum')
-        plt.show()
+            plt.figure(1)
+            plt.plot(range(num_ep*ep_length), energy_trace,'-+')
+            plt.xlabel('episode')
+            plt.ylabel('energy sum')
+            plt.show()
 
 
-        plt.figure(2)
-        plt.plot(range(num_ep*ep_length+1), reward_trace,'-+')
-        plt.xlabel('episode')
-        plt.ylabel('reward')
-        plt.show()
+            plt.figure(2)
+            plt.plot(range(num_ep*ep_length), reward_trace,'-+')
+            plt.xlabel('episode')
+            plt.ylabel('reward')
+            plt.show()
 
 
         print('average goodput: ', sum_goodput / num_ep, 'average reward :', sum_reward / num_ep)

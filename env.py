@@ -41,7 +41,8 @@ class Environment:
                 self.block_coords[i, :] = [c1, c2]
                 i += 1
 
-    def step(self, action):
+    def step(self, action, beta):
+        self.beta = beta
         self.txr = self.last_txr + action
         # txr is between 0 and 6
         for i in range(len(self.txr)):
@@ -150,8 +151,8 @@ class Environment:
 
         return self.current_state, reward, goodput, energy
 
-    def reset(self, beta, init_txr):
-        self.beta = beta
+    def reset(self, init_txr):
+        self.beta = 0
         self.init_txr = init_txr
 
         # node state
