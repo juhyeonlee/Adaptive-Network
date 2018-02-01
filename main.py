@@ -24,7 +24,7 @@ if __name__ == '__main__':
     action_space = ["%.1f" % round(i * 0.1, 1) for i in range(-10, 11)]
     #[-1.00, -0.90, -0.80, -0.70, -0.60, -0.50, -0.40, -0.30, -0.20, -0.10, 0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00]
 
-    ep_length = 300
+    ep_length = 500
 
     epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
     beta_set = [0.0, 0.2, 0.4]  # 0.0  # random.uniform(0.0, 0.3)
