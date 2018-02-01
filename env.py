@@ -47,8 +47,8 @@ class Environment:
         for i in range(len(self.txr)):
             if self.txr[i] < 0:
                 self.txr[i] = 0
-            elif self.txr[i] > 6:
-                self.txr[i] = 6
+            elif self.txr[i] > 5:
+                self.txr[i] = 5
         self.last_txr = self.txr
         print("action: ", action)
         print("updated TX range: ", self.txr)
@@ -99,8 +99,8 @@ class Environment:
         #TODO: constant for positive value
         # reward = goodput  - action * (0.4)
         # reward = self.utility_pos_coeff +connectivity_ratio * ( goodput * self.utility_coeff - action)
-        # reward = self.utility_pos_coeff + goodput * self.utility_coeff - action
-        reward = (self.utility_pos_coeff + 2 * connectivity_ratio + (goodput * self.utility_coeff - action))
+        reward = self.utility_pos_coeff + goodput * self.utility_coeff - action
+        #reward = (self.utility_pos_coeff + 2 * connectivity_ratio + (goodput * self.utility_coeff - action))
         reward = reward / 10.  # rescaling reward to train NN stable
         print("reward: ", reward)
         # next state
