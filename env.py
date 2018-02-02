@@ -42,6 +42,7 @@ class Environment:
                 i += 1
 
     def step(self, action):
+
         self.txr = self.last_txr + action
         # txr is between 0 and 6
         for i in range(len(self.txr)):
@@ -99,8 +100,8 @@ class Environment:
         #TODO: constant for positive value
         # reward = goodput  - action * (0.4)
         # reward = self.utility_pos_coeff +connectivity_ratio * ( goodput * self.utility_coeff - action)
-        reward = self.utility_pos_coeff + goodput * self.utility_coeff - action
-        #reward = (self.utility_pos_coeff + 2 * connectivity_ratio + (goodput * self.utility_coeff - action))
+        #reward = self.utility_pos_coeff + goodput * self.utility_coeff - action
+        reward = (self.utility_pos_coeff + 2 * connectivity_ratio + (goodput * self.utility_coeff - action))
         reward = reward / 10.  # rescaling reward to train NN stable
         print("reward: ", reward)
         # next state
@@ -150,7 +151,7 @@ class Environment:
 
         return self.current_state, reward, goodput, energy
 
-    def reset(self, beta, init_txr):
+    def reset(self, init_txr, beta):
         self.beta = beta
         self.init_txr = init_txr
 
