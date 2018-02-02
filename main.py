@@ -46,7 +46,7 @@ if __name__ == '__main__':
     reward_trace = []
     energy_trace = []
 
-     with tf.device("/cpu:0"):
+    with tf.device("/cpu:0"):
 
         if not os.path.exists('./train'):
             os.makedirs('./train')
