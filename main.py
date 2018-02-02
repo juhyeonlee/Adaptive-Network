@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import os
+import pickle
 
 from env import Environment
 from DQNAgent import DQNAgent
@@ -17,14 +18,14 @@ if __name__ == '__main__':
     # random_seed = 1 #??
 
     # utility coefficient
-    utility_coeff = 2  # weight on goodput
+    utility_coeff = 3  # weight on goodput
     utility_pos_coeff = 1  # to make reward to be positive
 
     # action_space = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1]
     action_space = ["%.1f" % round(i * 0.1, 1) for i in range(-10, 11)]
     #[-1.00, -0.90, -0.80, -0.70, -0.60, -0.50, -0.40, -0.30, -0.20, -0.10, 0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00]
 
-    ep_length = 100
+    ep_length = 200
 
     epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
     beta_set = [0.0, 0.0, 0.0]  # 0.0  # random.uniform(0.0, 0.3)
@@ -33,9 +34,11 @@ if __name__ == '__main__':
     discount_factor = 0.7
     ########################
 
-    num_ep = 3
-    sum_goodput = 0.
-    sum_reward = 0.
+    num_ep = 1000
+    sum_goodput = []
+    sum_reward = []
+    sum_energy = []
+    sum_connect_ratio = []
 
     env = Environment(one_dim, mu, init_txr, utility_coeff, utility_pos_coeff, action_space)
 
@@ -78,7 +81,7 @@ if __name__ == '__main__':
                 for i in range(len(state) - 4):
                     action[i], q_value[i] = agent[i].get_action(state[i])
                 # print('action check:', action)
-                next_state, reward, goodput, energy = env.step(action)
+                next_state, reward, goodput, energy, con_ratio = env.step(action, steps)
 
                 for i in range(len(state) - 4):
                     agent[i].learn(state[i], action[i], reward[i], next_state[i])
@@ -94,9 +97,11 @@ if __name__ == '__main__':
             # test
             for i in range(len(state) - 4):
                action[i] = agent[i].get_greedy_action(state[i])
-            next_state, reward, goodput, energy = env.step(action)
-            sum_goodput += goodput
-            sum_reward += np.sum(reward)
+            next_state, reward, goodput, energy, con_ratio = env.step(action, steps + 1)
+            sum_goodput.append(goodput)
+            sum_reward.append(reward)
+            sum_energy.append(energy)
+            sum_connect_ratio.append(con_ratio)
             goodput_trace.append(goodput)
             reward_trace.append(np.mean(reward))
             energy_trace.append(np.sum(energy))
@@ -115,15 +120,18 @@ if __name__ == '__main__':
             plt.plot(range(ep_length+1), energy_trace,'-+')
             plt.xlabel('episode')
             plt.ylabel('energy sum')
-            plt.show()
+            # plt.show()
 
 
             plt.figure(2)
             plt.plot(range(ep_length+1), reward_trace,'-+')
             plt.xlabel('episode')
             plt.ylabel('reward')
-            plt.show()
+            # plt.show()
 
+        # Saving the objects:
+        with open('test_v.pkl', 'w') as f:  # Python 3: open(..., 'wb')
+            pickle.dump([sum_reward, sum_goodput, sum_connect_ratio, sum_energy], f)
 
-        print('average goodput: ', sum_goodput / num_ep, 'average reward :', sum_reward / num_ep)
+        print('average goodput: ', np.sum(sum_goodput), 'average reward :', np.sum(sum_energy))
 
