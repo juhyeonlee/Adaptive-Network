@@ -1,3 +1,50 @@
+
+2018/01/25
+
+* epsilon의 최적값을 보기 위해 main_v2.py 코드 짜 놓음
+* 주현이는 deep RL 구현?
+
+* 추가 연구 포인트 *
+- epsilon decay에 대한 리서치를 하는 것이 좋은지?
+- goodput과 energy 사이의 trade-off를 보여줄 만한 내용있는지? --> utility_coeff를 사용하는 방법?
+
+=====================
+2018/01/24
+
+* 민혜생각의 현재의 최적 parameter
+one_dim = 7
+mu = 4 / 5
+init_txr = 2
+action_space = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1]
+환경에서는
+    epsilon = 0.4 # explore ratio
+    utility_coeff = 2 #0.95  # weight on goodput
+    utility_pos_coeff = 1  # to make reward to be positive
+
+
+
+======================
+2018/1/21 off-line meeting
+
+Future Schedule 
+* 기본 matlab code 완성. 
+* 그 후에, 여러 아이디어 discussion을 해서 적용을 해본 후 그 중에 성능 좋은 것을 뽑아냄. 
+
+
+용어정리
+* step: 하나의 action을 취하는 set
+* episod: step들의 집합. 우리의 경우는 number of node generation (= network member changes)가 poisson distribution으로 새롭게 나오는 것. 
+
+논문에 추가할 새로운 아이디어들
+* explore vs exploit : epsilon값을 constant로 주는 or decay되는 셋팅 --> 이론적인 startegy를 적용 ex) UCB, tomson's sampling 
+--> 처음에는 가져다 쓰는것 만으로 ok. best will be 우리 상황에 optimal한 방법을 proof 해주는 것
+* multi agent reinforcement learning 
+* member change 상황에서 new member나 사라진 멤버들을 어떻게 처리할지에 대한 방법 제안. 
+* 아주 나중에 idea: state 의 정의를 adjacent matrix를 가져다 사용하는 건? 
+--> 왜 이런생각이 났냐면 deep learning을 쓰려면 high dimension의 input (state definition)이 필요해서!! 
+
+==========================
+
 2018/1/8 conference call
 * discussion 내용: 구현 중 Q&A
 
