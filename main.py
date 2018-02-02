@@ -24,16 +24,16 @@ if __name__ == '__main__':
     action_space = ["%.1f" % round(i * 0.1, 1) for i in range(-10, 11)]
     #[-1.00, -0.90, -0.80, -0.70, -0.60, -0.50, -0.40, -0.30, -0.20, -0.10, 0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00]
 
-    ep_length = 300
+    ep_length = 100
 
-    #epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
     epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
+    beta_set = [0.0, 0.0, 0.0]  # 0.0  # random.uniform(0.0, 0.3)
 
     learning_rate = 0.01
     discount_factor = 0.7
     ########################
 
-    num_ep = 1
+    num_ep = 3
     sum_goodput = 0.
     sum_reward = 0.
 
@@ -46,8 +46,7 @@ if __name__ == '__main__':
     reward_trace = []
     energy_trace = []
 
-    with tf.device("/cpu:0"):
-
+     with tf.device("/cpu:0"):
 
         if not os.path.exists('./train'):
             os.makedirs('./train')
@@ -56,10 +55,9 @@ if __name__ == '__main__':
 
         summary = tf.summary.FileWriter('./train')
 
-
         for episode in range(num_ep):
             # TODO: firstly set to 0, then specified particular distributions for link failure rate
-            beta = 0.0  # random.uniform(0.0, 0.3)
+            beta = beta_set[episode]
             state = env.reset(init_txr, beta)
             agent = []
             tf.reset_default_graph()
@@ -75,6 +73,8 @@ if __name__ == '__main__':
             qvalue_trace = []
             for steps in range(ep_length):
                 print('step number: ,', steps)
+                #beta_idx = steps//(ep_length/len(beta_set))
+                #beta = beta_set[int(beta_idx)]
                 for i in range(len(state) - 4):
                     action[i], q_value[i] = agent[i].get_action(state[i])
                 # print('action check:', action)
@@ -102,8 +102,8 @@ if __name__ == '__main__':
             energy_trace.append(np.sum(energy))
             print('greedy approach - TX range: ', env.txr)
 
-            print('goodput trace: ', goodput_trace)
-            print('reward trace :', reward_trace)
+            # print('goodput trace: ', goodput_trace)
+            # print('reward trace :', reward_trace)
 
             plt.figure(0)
             plt.plot(range(ep_length+1), goodput_trace,'-*')
