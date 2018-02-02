@@ -42,7 +42,7 @@ class DQNAgent:
         state = np.reshape(state, [1, self.n_state])
         # state = state / 100.0  # rescale state
         q_value = self.pred_network.calc_output(state)
-        epsilon = 0.
+        # epsilon = 0.
         if np.random.rand() < epsilon:
             # take random action
             action_idx = np.random.randint(0, self.n_action)

@@ -17,17 +17,17 @@ if __name__ == '__main__':
     # random_seed = 1 #??
 
     # utility coefficient
-    utility_coeff = 8  # weight on goodput
+    utility_coeff = 3  # weight on goodput
     utility_pos_coeff = 1  # to make reward to be positive
 
     # action_space = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1]
     action_space = ["%.1f" % round(i * 0.1, 1) for i in range(-10, 11)]
     #[-1.00, -0.90, -0.80, -0.70, -0.60, -0.50, -0.40, -0.30, -0.20, -0.10, 0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00]
 
-    ep_length = 500
+    ep_length =100
 
-    epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
-    beta_set = [0.0, 0.2, 0.4]  # 0.0  # random.uniform(0.0, 0.3)
+    #epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
+    epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.01, 'epsilon_step': 100}
 
     learning_rate = 0.01
     discount_factor = 0.7
@@ -61,8 +61,8 @@ if __name__ == '__main__':
 
         for episode in range(num_ep):
             # TODO: firstly set to 0, then specified particular distributions for link failure rate
-
-            state = env.reset(init_txr)
+            beta = 0.0
+            state = env.reset(init_txr, beta)
             agent = []
             for i in range(len(state) - 4):
                 agent.append(DQNAgent(sess, 1, action_space, discount_factor, i, epsilon, learning_rate))
@@ -72,12 +72,12 @@ if __name__ == '__main__':
             qvalue_trace = []
             for steps in range(ep_length):
                 print('step number: ,', steps)
-                beta_idx = steps//(ep_length/len(beta_set))
-                beta = beta_set[int(beta_idx)]
+                #beta_idx = steps//(ep_length/len(beta_set))
+                #beta = beta_set[int(beta_idx)]
                 for i in range(len(state) - 4):
                     action[i], q_value[i] = agent[i].get_action(state[i])
                 # print('action check:', action)
-                next_state, reward, goodput, energy = env.step(action, beta)
+                next_state, reward, goodput, energy = env.step(action)
 
                 for i in range(len(state) - 4):
                     agent[i].learn(state[i], action[i], reward[i], next_state[i])
@@ -105,13 +105,13 @@ if __name__ == '__main__':
             print('reward trace :', reward_trace)
 
             plt.figure(0)
-            plt.plot(range(num_ep*ep_length), goodput_trace,'-*')
+            plt.plot(range(ep_length), goodput_trace,'-*')
             plt.xlabel('episode')
             plt.ylabel('goodput')
             # plt.show()
 
             plt.figure(1)
-            plt.plot(range(num_ep*ep_length), energy_trace,'-+')
+            plt.plot(range(ep_length), energy_trace,'-+')
             plt.xlabel('episode')
             plt.ylabel('energy sum')
             plt.show()
