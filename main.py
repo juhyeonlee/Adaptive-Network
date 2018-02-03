@@ -34,7 +34,7 @@ if __name__ == '__main__':
     discount_factor = 0.7
     ########################
 
-    num_ep = 1000
+    num_ep = 500
     sum_goodput = []
     sum_reward = []
     sum_energy = []
@@ -60,7 +60,7 @@ if __name__ == '__main__':
 
         for episode in range(num_ep):
             # TODO: firstly set to 0, then specified particular distributions for link failure rate
-            beta = beta_set[episode]
+            beta = 0.0 #beta_set[episode]
             state = env.reset(init_txr, beta)
             agent = []
             tf.reset_default_graph()
@@ -130,7 +130,7 @@ if __name__ == '__main__':
             # plt.show()
 
         # Saving the objects:
-        with open('test_v.pkl', 'w') as f:  # Python 3: open(..., 'wb')
+        with open('test_v.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
             pickle.dump([sum_reward, sum_goodput, sum_connect_ratio, sum_energy], f)
 
         print('average goodput: ', np.sum(sum_goodput), 'average reward :', np.sum(sum_energy))
