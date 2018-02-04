@@ -52,7 +52,6 @@ exp.sh
 참고
 
 2018/01/28 off-line meeting
-
 <민혜>
 - explore vs explison 비율 관련 리서치
 - 전체 시스템 안정화 시키는 parameter 찾아내기

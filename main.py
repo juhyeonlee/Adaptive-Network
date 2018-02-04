@@ -140,17 +140,24 @@ if __name__ == '__main__':
         # print('goodput trace: ', goodput_trace)
         # print('reward trace :', reward_trace)
 
-        # plt.figure(0)
-        # plt.plot(range(ep_length+1), goodput_trace,'-*')
-        # plt.xlabel('episode')
-        # plt.ylabel('goodput')
-        # plt.show()
-        #
-        # plt.figure(1)
-        # plt.plot(range(ep_length+1), energy_trace,'-+')
-        # plt.xlabel('episode')
-        # plt.ylabel('energy sum')
-        # plt.show()
+        plt.figure(0)
+        plt.plot(range(ep_length+1), goodput_trace,'-*')
+        plt.xlabel('episode')
+        plt.ylabel('goodput')
+        #plt.show()
+
+        plt.figure(1)
+        plt.plot(range(ep_length+1), energy_trace,'-+')
+        plt.xlabel('episode')
+        plt.ylabel('energy per an agent')
+
+
+        plt.figure(2)
+        plt.plot(range(ep_length+1), con_ratio_trace,'-+')
+        plt.xlabel('episode')
+        plt.ylabel('connectivity ratio')
+
+        plt.show()
         #
         #
         # plt.figure(2)
