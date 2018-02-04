@@ -8,7 +8,7 @@ import argparse
 
 
 from env import Environment
-from DQNAgent_UCB import DQNAgent
+from DQNAgent import DQNAgent
 
 
 if __name__ == '__main__':
@@ -47,19 +47,20 @@ if __name__ == '__main__':
     # action_space = ["%.1f" % round(i * 0.25, 1) for i in range(0, 21)]
     #[-1.00, -0.90, -0.80, -0.70, -0.60, -0.50, -0.40, -0.30, -0.20, -0.10, 0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00]
 
-<<<<<<< HEAD
-    ep_length =50
+#<<<<<<< HEAD
+    #ep_length =50
+
 
     #if UCB is used, epsilon is meaningless
-    #epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
-    epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.01, 'epsilon_step': 100}
-=======
-    ep_length = 200
-    num_ep = 1000
+    epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
+    #epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.01, 'epsilon_step': 100}
+#=======
+    ep_length = 2#00
+    num_ep = 1#000
 
     epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
     beta_set = [0.0, 0.0, 0.0]  # 0.0  # random.uniform(0.0, 0.3)
->>>>>>> f7a0a5a388b964427f8e17fab7ad6b94d6310539
+#>>>>>>> f7a0a5a388b964427f8e17fab7ad6b94d6310539
 
     learning_rate = 0.01
     discount_factor = 0.7
