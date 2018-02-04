@@ -1,0 +1,39 @@
+1. 실험에 따라서 어떤 변수 저장할지 코드 짜기
+2. network shortest path 보여지게 plot 짜기
+
+
+- 지금 너무 randomness가 높아서 connection이 아예 끊어지는 경우도 많은 것 같아 걱정..
+
+
+- figure 1 : learning curve (1 time)
+1.1 step vs energy
+1.2 step vs goodput
+1.3 step vs coonectivity ratio
+1.4 step vs reward
+1.5 step vs q value
+
+- figure 2 : network formation, shortest path (1 time)
+2.1 early step vs network formation 
+2.2 intermediate step vs network formation
+2.3 final step vs network formation
+
+- figure 3 : performance comparison (1000 times save, range: 64, 100, 1000)
+3.3 network size vs goodput : DQN, Q table, Value iteration, TCLE
+
+- figure 4 : network size change (1000 times save, range: 64, 100, 1000)
+4.1 network size vs goodput
+4.2 network size vs connectivity ratio
+4.2 netowrk size vs energy 
+
+- figure 5: utility coefficient change (1000 times save, range: )
+5.1 utility coefficient vs goodput
+5.2 utiltiy coefficient vs connectivity ratio
+5.3 utiltiy coefficient vs energy
+
+- figure 6: beta coefficient change (1000 times save, range: 0.0 0.15, 0.3)
+6.1 beta vs goodput
+6.2 beta vs connectivity ratio
+6.3 beta vs energy
+
+- figure 7: node transmission value variation (1 times, time series)
+7.1 step vs node transmission value with color coding
