@@ -1,0 +1,15 @@
+아마존 aws 접속 id/pw
+id: jhlee899@gmail.com
+pw: icml0209
+
+- terminal 열어서 치기
+
+ssh -i jhlee-rl.pem ubuntu@54.218.246.238
+cd project/Adaptive-Network
+bash exp.sh
+
+ssh 안깔렸을 시에는 ssh 명령어 안될 수 도 있음
+jhlee-rl.pem (key 파일)은 메일로 보내둠. 다운받아서 현재 터미널이 가르키 폴더에 넣거나
+위 명령어 칠때 key파일이 있는 위치로 가서 명령어 실행
+
+
