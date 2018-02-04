@@ -11,7 +11,7 @@ https://docs.google.com/document/d/1ZmyRliXf7kwcV5vJDj3YmxJgeLdcQ9qzkEVxDS2ybcw/
 (utility_pos_coeff = 0 & )utility_coeff =1 일때엔 무조건 action을 positive 크게 가져가는게 좋을텐데 (energy 소모는 신경안쓰는 경우이므로), 그럼에도 불구하고 energy 줄이는 방향으로 가는 node 존재?
 --> 이 energy 줄이는 방향으로 가는걸 없애주려면 utility_pos_coeff를 5이상으로 잡아줘야함!
 --> reward가 음수로 나와도 상관 없을텐데 utility_pos_coeff 값에 영향을 받는듯?
---> 현재 설정에서는 utility_pos_coeff 의 영향이 크지 않아 보임
+--> 현재 설정에서는 utility_pos_coeff 의 영향이 크지 않아 보임 (오히려utility_pos_coeff 나 reward funciton 내에 *20 이 숫자값에 더 큰 영향을 받는듯 )-->이게 문제!!!
 * 현재설정:
 utility_pos_coeff = 5
 reward = self.utility_pos_coeff + self.utility_coeff * 20 * (goodput - self.last_goodput) - (1-self.utility_coeff) * action

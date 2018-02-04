@@ -10,8 +10,7 @@ import argparse
 from env import Environment
 from DQNAgent import DQNAgent
 
-#Todo: dqn에 서 q value의 initial 값이 0이 아닌 max값 (maybe 1?)으로 설정
-#Todo: 그럼 대신 epsilon을 작게 해도 될듯?
+
 if __name__ == '__main__':
 
     # experiment
@@ -20,7 +19,7 @@ if __name__ == '__main__':
     # beta_set = [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3]
     parser = argparse.ArgumentParser()
     parser.add_argument("--nw_size", help="network size", type=int, default=7)
-    parser.add_argument("--coeff", help="utility coeff", type=float, default=3.0)
+    parser.add_argument("--coeff", help="utility coeff", type=float, default=0.8)
     parser.add_argument("--beta", help="beta, link failure rate", type=float, default=0.0)
     args = parser.parse_args()
 
@@ -37,12 +36,12 @@ if __name__ == '__main__':
     ########### tuning parameters #########
     one_dim = args.nw_size
     mu = 4 / 5
-    init_txr = 2
+    init_txr = 0
     # random_seed = 1 #??
 
     # utility coefficient
     utility_coeff = args.coeff  # weight on goodput
-    utility_pos_coeff = 1  # to make reward to be positive
+    utility_pos_coeff = 5  # to make reward to be positive --> theoretically, set it as zero since negative utility is OK --> but experimentally, that's wrong
 
     # action_space = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1]
     action_space = ["%.1f" % round(i * 0.1, 1) for i in range(-10, 11)]
@@ -53,8 +52,8 @@ if __name__ == '__main__':
     #if UCB is used, epsilon is meaningless
     epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
     # 왜인지 모르겠지만, epsilon_step 이 100을 넘어가면 dqn이 energy를 과도하게 줄이는 방향으로 설정됨
-    #epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.01, 'epsilon_step': 100}
-    ep_length = 110#00
+    #epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.1, 'epsilon_step': 100}
+    ep_length = 200#00
     num_ep = 1#000
 
     learning_rate = 0.01
@@ -151,6 +150,13 @@ if __name__ == '__main__':
         plt.plot(range(ep_length+1), energy_trace,'-+')
         plt.xlabel('episode')
         plt.ylabel('energy per an agent')
+
+
+        plt.figure(2)
+        plt.plot(range(ep_length+1), con_ratio_trace,'-+')
+        plt.xlabel('episode')
+        plt.ylabel('connectivity ratio')
+
         plt.show()
         #
         #
