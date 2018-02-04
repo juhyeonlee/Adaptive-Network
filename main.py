@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import os
 import pickle
+import argparse
+
 
 from env import Environment
 from DQNAgent import DQNAgent
@@ -12,9 +14,14 @@ from DQNAgent import DQNAgent
 if __name__ == '__main__':
 
     # experiment
-    one_dim_set = [6, 8, 10, 20, 30]
-    utility_coeff_set = [1.0, 1.5, 2.0, 2.5, 3.0]
-    beta_set = [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3]
+    # one_dim_set = [6, 8, 10, 20, 30]
+    # utility_coeff_set = [1.0, 3.0, 5.0, 7.0]
+    # beta_set = [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--nw_size", help="network size", type=int, default=5)
+    parser.add_argument("--coeff", help="utility coeff", type=float, default=3.0)
+    parser.add_argument("--beta", help="beta, link failure rate", type=float, default=0.0)
+    args = parser.parse_args()
 
     save_goodput = []
     save_reward = []
@@ -26,13 +33,13 @@ if __name__ == '__main__':
         os.makedirs('./model')
 
     ########### tuning parameters #########
-    one_dim = 7
+    one_dim = args.nw_size
     mu = 4 / 5
     init_txr = 2
     # random_seed = 1 #??
 
     # utility coefficient
-    utility_coeff = 3  # weight on goodput
+    utility_coeff = args.coeff  # weight on goodput
     utility_pos_coeff = 1  # to make reward to be positive
 
     # action_space = [-1, -0.75, -0.5, -0.25, 0, 0.25, 0.5, 0.75, 1]
@@ -48,6 +55,8 @@ if __name__ == '__main__':
 
     learning_rate = 0.01
     discount_factor = 0.7
+
+    beta = args.beta
     ########################
 
     env = Environment(one_dim, mu, init_txr, utility_coeff, utility_pos_coeff, action_space)
@@ -55,7 +64,7 @@ if __name__ == '__main__':
     n_actions = env.n_actions
     action_space = env.action_space
 
-    beta = beta_set[0]
+
     for episode in range(num_ep):
         state = env.reset(init_txr, beta)
         agent = []
