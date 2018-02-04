@@ -48,8 +48,8 @@ class Environment:
         for i in range(len(self.txr)):
             if self.txr[i] < 0:
                 self.txr[i] = 0
-            elif self.txr[i] > 5:
-                self.txr[i] = 5
+            elif self.txr[i] > 3:
+                self.txr[i] = 3
         self.last_txr = self.txr
         print("action: ", action)
         print("updated TX range: ", self.txr)
@@ -124,6 +124,9 @@ class Environment:
         # reward = self.utility_pos_coeff +connectivity_ratio * ( goodput * self.utility_coeff - action)
         #reward = self.utility_pos_coeff + goodput * self.utility_coeff - action
         reward = (self.utility_pos_coeff + 2 * connectivity_ratio + (goodput * self.utility_coeff - action))
+        print('goodput * coeff', goodput * self.utility_coeff)
+        print('action', action)
+        print("reward: ", reward)
         reward = reward / 10.  # rescaling reward to train NN stable
         # print("reward: ", reward)
         # next state
@@ -239,6 +242,6 @@ class Environment:
         # save current transmission range
         self.last_txr = np.ones((self.num_players + 4), dtype=np.int32) * self.init_txr
 
-        return self.current_state
+        return self.current_state, self.num_players
 
 

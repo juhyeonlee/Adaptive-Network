@@ -10,7 +10,8 @@ import argparse
 from env import Environment
 from DQNAgent import DQNAgent
 
-
+#Todo: dqn에 서 q value의 initial 값이 0이 아닌 max값 (maybe 1?)으로 설정
+#Todo: 그럼 대신 epsilon을 작게 해도 될듯?
 if __name__ == '__main__':
 
     # experiment
@@ -18,7 +19,7 @@ if __name__ == '__main__':
     # utility_coeff_set = [1.0, 3.0, 5.0, 7.0]
     # beta_set = [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3]
     parser = argparse.ArgumentParser()
-    parser.add_argument("--nw_size", help="network size", type=int, default=5)
+    parser.add_argument("--nw_size", help="network size", type=int, default=7)
     parser.add_argument("--coeff", help="utility coeff", type=float, default=3.0)
     parser.add_argument("--beta", help="beta, link failure rate", type=float, default=0.0)
     args = parser.parse_args()
@@ -28,6 +29,7 @@ if __name__ == '__main__':
     save_energy = []
     save_connect_ratio = []
     save_txr = []
+    save_num_players = []
 
     if not os.path.exists('./model'):
         os.makedirs('./model')
@@ -47,20 +49,13 @@ if __name__ == '__main__':
     # action_space = ["%.1f" % round(i * 0.25, 1) for i in range(0, 21)]
     #[-1.00, -0.90, -0.80, -0.70, -0.60, -0.50, -0.40, -0.30, -0.20, -0.10, 0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60, 0.70, 0.80, 0.90, 1.00]
 
-#<<<<<<< HEAD
-    #ep_length =50
-
 
     #if UCB is used, epsilon is meaningless
     epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
+    # 왜인지 모르겠지만, epsilon_step 이 100을 넘어가면 dqn이 energy를 과도하게 줄이는 방향으로 설정됨
     #epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.01, 'epsilon_step': 100}
-#=======
-    ep_length = 2#00
+    ep_length = 110#00
     num_ep = 1#000
-
-    epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
-    beta_set = [0.0, 0.0, 0.0]  # 0.0  # random.uniform(0.0, 0.3)
-#>>>>>>> f7a0a5a388b964427f8e17fab7ad6b94d6310539
 
     learning_rate = 0.01
     discount_factor = 0.7
@@ -75,7 +70,7 @@ if __name__ == '__main__':
 
 
     for episode in range(num_ep):
-        state = env.reset(init_txr, beta)
+        state, num_players = env.reset(init_txr, beta) # len(state) =  num_players + 4
         agent = []
         tf.reset_default_graph()
         sess = tf.Session()
@@ -92,13 +87,17 @@ if __name__ == '__main__':
         txr_trace = []
         qvalue_trace = []
         for steps in range(ep_length):
-            # print('step number: ,', steps)
+            print('step number: ,', steps)
             #beta_idx = steps//(ep_length/len(beta_set))
             #beta = beta_set[int(beta_idx)]
             for i in range(len(state) - 4):
                 action[i], q_value[i] = agent[i].get_action(state[i])
             # print('action check:', action)
             next_state, reward, goodput, energy, con_ratio = env.step(action, steps)
+
+            #print('total energy sum: ', np.sum(energy))
+            #print('number of agemts: ',num_players )
+            #print('energy per an agent: ',np.sum(energy)/num_players )
 
             for i in range(len(state) - 4):
                 agent[i].learn(state[i], action[i], reward[i], next_state[i])
@@ -107,7 +106,8 @@ if __name__ == '__main__':
 
             goodput_trace.append(goodput)
             reward_trace.append(np.mean(reward))
-            energy_trace.append(np.sum(energy))
+            energy_trace.append(np.sum(energy)/num_players) #energy per an agent
+            #print('energy trace: ', energy_trace)
             con_ratio_trace.append(con_ratio)
             txr_trace.append(env.txr)
             # qvalue_trace.append(np.mean(q_value))
@@ -119,7 +119,7 @@ if __name__ == '__main__':
         next_state, reward, goodput, energy, con_ratio = env.step(action, ep_length)
         goodput_trace.append(goodput)
         reward_trace.append(np.mean(reward))
-        energy_trace.append(np.sum(energy))
+        energy_trace.append(np.sum(energy)/num_players) #energy per an agent
         con_ratio_trace.append(con_ratio)
         txr_trace.append(env.txr)
 
@@ -130,7 +130,9 @@ if __name__ == '__main__':
         save_energy.append(energy_trace)
         save_connect_ratio.append(con_ratio_trace)
         save_txr.append(txr_trace)
+        save_num_players.append(num_players)
         saver.save(sess, './model/model_ep'+ str(episode) + '_nw' + str(one_dim) + '_beta' + str(beta) + '_coeff' + str(utility_coeff) + '.ckpt')
+
         # goodput_trace.append(goodput)
         # reward_trace.append(np.mean(reward))
         # energy_trace.append(np.sum(energy))
@@ -139,17 +141,17 @@ if __name__ == '__main__':
         # print('goodput trace: ', goodput_trace)
         # print('reward trace :', reward_trace)
 
-        # plt.figure(0)
-        # plt.plot(range(ep_length+1), goodput_trace,'-*')
-        # plt.xlabel('episode')
-        # plt.ylabel('goodput')
-        # plt.show()
-        #
-        # plt.figure(1)
-        # plt.plot(range(ep_length+1), energy_trace,'-+')
-        # plt.xlabel('episode')
-        # plt.ylabel('energy sum')
-        # plt.show()
+        plt.figure(0)
+        plt.plot(range(ep_length+1), goodput_trace,'-*')
+        plt.xlabel('episode')
+        plt.ylabel('goodput')
+        #plt.show()
+
+        plt.figure(1)
+        plt.plot(range(ep_length+1), energy_trace,'-+')
+        plt.xlabel('episode')
+        plt.ylabel('energy per an agent')
+        plt.show()
         #
         #
         # plt.figure(2)
