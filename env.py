@@ -16,6 +16,8 @@ class Environment:
         #self.action_space = [-3, -2, -1, 0, 1, 2, 3]
         self.action_space = action_space
         self.n_actions = len(self.action_space)
+        self.last_goodput = 0.0
+        self.s_init_txr = 2.0
 
         # node state
         self.block_coords = np.zeros((self.max_block, 2))
@@ -48,8 +50,11 @@ class Environment:
         for i in range(len(self.txr)):
             if self.txr[i] < 0:
                 self.txr[i] = 0
-            elif self.txr[i] > 5:
-                self.txr[i] = 5
+            elif self.txr[i] > 3:
+                self.txr[i] = 3
+        # source node tx_r is fixed as s_init_txr
+        self.txr[len(self.txr) - 4] = self.s_init_txr
+        self.txr[len(self.txr) - 3] = self.s_init_txr
         self.last_txr = self.txr
         print("action: ", action)
         print("updated TX range: ", self.txr)
@@ -123,7 +128,13 @@ class Environment:
         # reward = goodput  - action * (0.4)
         # reward = self.utility_pos_coeff +connectivity_ratio * ( goodput * self.utility_coeff - action)
         #reward = self.utility_pos_coeff + goodput * self.utility_coeff - action
-        reward = (self.utility_pos_coeff + 2 * connectivity_ratio + (goodput * self.utility_coeff - action))
+        #reward = (self.utility_pos_coeff + 2 * connectivity_ratio + (goodput * self.utility_coeff - action))
+        #reward = self.utility_pos_coeff + self.utility_coeff * (goodput - self.last_goodput) - action
+        reward = self.utility_pos_coeff + self.utility_coeff * 20 * (goodput - self.last_goodput) - (1-self.utility_coeff) * action
+
+        print('goodput improvement ',  goodput - self.last_goodput)
+        print('action', action)
+        print("reward: ", reward)
         reward = reward / 10.  # rescaling reward to train NN stable
         # print("reward: ", reward)
         # next state
@@ -170,6 +181,7 @@ class Environment:
         for i in range(self.num_players + 4):
             self.current_state[i] = np.sum(self.adj_matrix[pp[i]]) / 100.
             # self.current_state[i][1] = self.txr[i] / 6.0
+        self.last_goodput = goodput
 
         return self.current_state, reward, goodput, energy, connectivity_ratio
 
@@ -182,6 +194,7 @@ class Environment:
         self.coords = []
         self.players = []
         self.node_loc = []
+        self.s_init_txr = 2
 
         # block coordination random generation
         for block in range(self.max_block):
@@ -225,8 +238,24 @@ class Environment:
         self.adj_matrix = np.zeros((self.num_node, self.num_node))
         self.beta_matrix = np.random.rand(self.num_node, self.num_node) > self.beta
         pp = self.players + list(range(self.num_node - 4, self.num_node))
-        for p in pp:
-            self.adj_matrix[p] = (self.d[p] <= float(self.init_txr)) * self.beta_matrix[p]
+
+        self.txr = np.ones((self.num_players + 4), dtype=np.int32) * self.init_txr
+        self.txr[len(self.txr) - 4] = self.s_init_txr
+        self.txr[len(self.txr) - 3] = self.s_init_txr
+
+        # for p in pp:
+        #     # for source nodes
+        #     if p == self.num_node-4 :
+        #         self.adj_matrix[p] = (self.d[p] <= float(self.s_init_txr)) * self.beta_matrix[p]
+        #     elif p == self.num_node - 3:
+        #         self.adj_matrix[p] = (self.d[p] <= float(self.s_init_txr)) * self.beta_matrix[p]
+        #     # for agents (intermediate nodes)
+        #     else:
+        #         self.adj_matrix[p] = (self.d[p] <= float(self.init_txr)) * self.beta_matrix[p]
+
+        for idx, p in enumerate(pp):
+            self.adj_matrix[p] = (self.d[p] <= float(self.txr[idx])) * self.beta_matrix[p]
+
         for i in range(self.num_node):
             self.adj_matrix[i, i] = 1
 
@@ -239,6 +268,6 @@ class Environment:
         # save current transmission range
         self.last_txr = np.ones((self.num_players + 4), dtype=np.int32) * self.init_txr
 
-        return self.current_state
+        return self.current_state, self.num_players
 
 

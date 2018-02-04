@@ -17,10 +17,10 @@
 2.2 intermediate step vs network formation
 2.3 final step vs network formation
 
-- figure 3 : performance comparison (1000 times save, range: 64, 100, 1000)
-3.3 network size vs goodput : DQN, Q table, Value iteration, TCLE
+- figure 3 : performance comparison (1000 times save, one_dim = [5, 7] --> averaged number of agents = 28.8, 80)
+3.3 network size vs goodput : DQN, Q table, Value iteration, TCLE --> 아마 이건 작은 숫자에 대해서 해야할듯 (VI, TCLE에서의 연산복잡도 때문)
 
-- figure 4 : network size change (1000 times save, range: 64, 100, 1000)
+- figure 4 : network size change (1000 times save, one_dim = [7,12,17,22,27] --> averaged number of agents = 80, 320 720 1270 2000)
 4.1 network size vs goodput
 4.2 network size vs connectivity ratio
 4.2 netowrk size vs energy 
@@ -35,5 +35,5 @@
 6.2 beta vs connectivity ratio
 6.3 beta vs energy
 
-- figure 7: node transmission value variation (1 times, time series)
-7.1 step vs node transmission value with color coding
+- figure 7: node tx_r variation (1 times, time series)
+7.1 step vs node tx_r value over time with color coding (x-axis: node index, y-axis: time)
