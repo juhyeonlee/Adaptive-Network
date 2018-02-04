@@ -5,6 +5,7 @@ import tensorflow as tf
 import os
 import pickle
 import argparse
+import time
 
 
 from env import Environment
@@ -53,7 +54,7 @@ if __name__ == '__main__':
     epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
     # 왜인지 모르겠지만, epsilon_step 이 100을 넘어가면 dqn이 energy를 과도하게 줄이는 방향으로 설정됨
     #epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.1, 'epsilon_step': 100}
-    ep_length = 200#00
+    ep_length = 150#00
     num_ep = 1#000
 
     learning_rate = 0.01
@@ -66,6 +67,8 @@ if __name__ == '__main__':
 
     n_actions = env.n_actions
     action_space = env.action_space
+
+    t = time.time()
 
 
     for episode in range(num_ep):
@@ -157,18 +160,21 @@ if __name__ == '__main__':
         plt.xlabel('episode')
         plt.ylabel('connectivity ratio')
 
+        #plt.show()
+        #
+        #
+        plt.figure(3)
+        plt.plot(range(ep_length+1), reward_trace,'-+')
+        plt.xlabel('episode')
+        plt.ylabel('reward')
         plt.show()
-        #
-        #
-        # plt.figure(2)
-        # plt.plot(range(ep_length+1), reward_trace,'-+')
-        # plt.xlabel('episode')
-        # plt.ylabel('reward')
-        # plt.show()
 
     # Saving the objects:
     with open('var_nw' + str(one_dim) + '_beta' + str(beta) + '_coeff' + str(utility_coeff) + '.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
         pickle.dump([save_reward, save_goodput, save_connect_ratio, save_energy, save_txr], f)
 
     # print('average goodput: ', np.sum(sum_goodput), 'average reward :', np.sum(sum_energy))
+
+    print('processing time ', time.time()-t)
+
 
