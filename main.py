@@ -112,7 +112,7 @@ if __name__ == '__main__':
             #print('energy trace: ', energy_trace)
             con_ratio_trace.append(con_ratio)
             txr_trace.append(env.txr)
-            # qvalue_trace.append(np.mean(q_value))
+            qvalue_trace.append(np.mean(q_value))
 
 
         # test
@@ -163,10 +163,17 @@ if __name__ == '__main__':
         #plt.show()
         #
         #
+<<<<<<< HEAD
         plt.figure(3)
         plt.plot(range(ep_length+1), reward_trace,'-+')
         plt.xlabel('episode')
         plt.ylabel('reward')
+=======
+        plt.figure(2)
+        plt.plot(range(ep_length), qvalue_trace,'-+')
+        plt.xlabel('episode')
+        plt.ylabel('Q value')
+>>>>>>> 9f79c32017767f16cf949212b1af90aa610b8d3e
         plt.show()
 
     # Saving the objects:
