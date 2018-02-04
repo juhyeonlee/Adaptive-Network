@@ -1,5 +1,0 @@
-qlearning
-average goodput:  1.03883333333 average reward : 29.7913333333
-random...
-average goodput:  1.19066666667 average reward : 35.4245
-ㅜ_ㅜ

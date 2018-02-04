@@ -41,15 +41,15 @@ class Environment:
                 self.block_coords[i, :] = [c1, c2]
                 i += 1
 
-    def step(self, action):
+    def step(self, action, steps):
 
         self.txr = self.last_txr + action
         # txr is between 0 and 6
         for i in range(len(self.txr)):
             if self.txr[i] < 0:
                 self.txr[i] = 0
-            elif self.txr[i] > 5:
-                self.txr[i] = 5
+            elif self.txr[i] > 3:
+                self.txr[i] = 3
         self.last_txr = self.txr
         print("action: ", action)
         print("updated TX range: ", self.txr)
@@ -69,6 +69,28 @@ class Environment:
             for j in range(self.num_node):
                 if self.adj_matrix[i, j] == 1:
                     G.add_edges_from([(i, j)])
+        # red coloring for source and destination nodes
+
+        plt.clf()
+        if steps % 300 == 0 and steps != 0:
+            val_map = {self.num_node - 1: 0.57,
+                       self.num_node - 2: 0.57,
+                       self.num_node - 3: 0.57,
+                       self.num_node - 4: 0.57}
+            values = [val_map.get(node, 0.1) for node in G.nodes()]
+            labels = {}
+            for node in G.nodes():
+                labels[node] = str(node)
+            nx.draw_networkx_nodes(G, self.node_loc, cmap=plt.get_cmap('jet'),
+                                   node_color=values, node_size=10)
+            nx.draw_networkx_labels(G, self.node_loc, labels=labels, font_size=10)
+            nx.draw_networkx_edges(G, self.node_loc, edge_color='c', arrows=True)
+            # for idx, p in enumerate(pp):
+            #     circle = plt.Circle(self.node_loc[p], self.txr[idx], edgecolor='r', facecolor='none')
+            #     plt.gca().add_patch(circle)
+
+            plt.grid()
+            plt.savefig('net2_' + str(steps) + '.png', dpi=500)
 
         # find shortest path between sources and destinations (2 * 2)
         dist = []
@@ -102,8 +124,11 @@ class Environment:
         # reward = self.utility_pos_coeff +connectivity_ratio * ( goodput * self.utility_coeff - action)
         #reward = self.utility_pos_coeff + goodput * self.utility_coeff - action
         reward = (self.utility_pos_coeff + 2 * connectivity_ratio + (goodput * self.utility_coeff - action))
-        reward = reward / 10.  # rescaling reward to train NN stable
+        print('goodput * coeff', goodput * self.utility_coeff)
+        print('action', action)
         print("reward: ", reward)
+        reward = reward / 10.  # rescaling reward to train NN stable
+        # print("reward: ", reward)
         # next state
         #TODO: only change node location
         # change node location
@@ -149,7 +174,7 @@ class Environment:
             self.current_state[i] = np.sum(self.adj_matrix[pp[i]]) / 100.
             # self.current_state[i][1] = self.txr[i] / 6.0
 
-        return self.current_state, reward, goodput, energy
+        return self.current_state, reward, goodput, energy, connectivity_ratio
 
     def reset(self, init_txr, beta):
         self.beta = beta
@@ -217,6 +242,6 @@ class Environment:
         # save current transmission range
         self.last_txr = np.ones((self.num_players + 4), dtype=np.int32) * self.init_txr
 
-        return self.current_state
+        return self.current_state, self.num_players
 
 
