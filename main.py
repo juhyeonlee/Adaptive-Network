@@ -109,7 +109,7 @@ if __name__ == '__main__':
             #print('energy trace: ', energy_trace)
             con_ratio_trace.append(con_ratio)
             txr_trace.append(env.txr)
-            # qvalue_trace.append(np.mean(q_value))
+            qvalue_trace.append(np.mean(q_value))
 
 
         # test
@@ -160,11 +160,11 @@ if __name__ == '__main__':
         plt.show()
         #
         #
-        # plt.figure(2)
-        # plt.plot(range(ep_length+1), reward_trace,'-+')
-        # plt.xlabel('episode')
-        # plt.ylabel('reward')
-        # plt.show()
+        plt.figure(2)
+        plt.plot(range(ep_length), qvalue_trace,'-+')
+        plt.xlabel('episode')
+        plt.ylabel('Q value')
+        plt.show()
 
     # Saving the objects:
     with open('var_nw' + str(one_dim) + '_beta' + str(beta) + '_coeff' + str(utility_coeff) + '.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
