@@ -1,5 +1,15 @@
 https://docs.google.com/document/d/1ZmyRliXf7kwcV5vJDj3YmxJgeLdcQ9qzkEVxDS2ybcw/edit
 
+
+========================
+2018-02-04 민혜 comments
+1. reward function 수정 필요? - goodput 대신 goodput improvement로 변경 (action 자체가 '변화량'이므로)
+2. 현재의 dqn에서 q_value initializing이 zero로 되어 있는지? 한번 max값으로 해보는건 어떨지? --> optimistic initial values
+--> 우선 이건 패스! (Q value는 Weight initial해서 나오는값에서 곱해서나오는거라서, Weight initial은 어차피 0이아니얌 xavier 라는 방법써서 랜덤하게나옴. 따라서 임의의값)
+3. max tx_r이 6은 너무 큰 듯? 6이면 3 blocks이라서;; reasonable 실험 setting을 하려면 max 3정도가 적당할듯
+5. 지금 source의 tx_r은 항상 2로 fix된거 맞음?
+4. initial tx_r을 source빼고는 다 0부터 시작하는건 어떨지?
+=====================
 2018/01/28 off-line meeting
 
 <민혜>
