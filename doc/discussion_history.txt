@@ -2,16 +2,56 @@ https://docs.google.com/document/d/1ZmyRliXf7kwcV5vJDj3YmxJgeLdcQ9qzkEVxDS2ybcw/
 
 
 ========================
-2018-02-04 민혜 comments
-1. reward function 수정 필요? - goodput 대신 goodput improvement로 변경 (action 자체가 '변화량'이므로)
-2. 현재의 dqn에서 q_value initializing이 zero로 되어 있는지? 한번 max값으로 해보는건 어떨지? --> optimistic initial values
---> 우선 이건 패스! (Q value는 Weight initial해서 나오는값에서 곱해서나오는거라서, Weight initial은 어차피 0이아니얌 xavier 라는 방법써서 랜덤하게나옴. 따라서 임의의값)
-3. max tx_r이 6은 너무 큰 듯? 6이면 3 blocks이라서;; reasonable 실험 setting을 하려면 max 3정도가 적당할듯
-5. 지금 source의 tx_r은 항상 2로 fix된거 맞음?
-4. initial tx_r을 source빼고는 다 0부터 시작하는건 어떨지?
-=====================
-2018/01/28 off-line meeting
+2018-02-04
 
+민혜 comments
+
+이상한점
+1. 아래 수정내역 1에서 수정한 reward function 설정하에,
+(utility_pos_coeff = 0 & )utility_coeff =1 일때엔 무조건 action을 positive 크게 가져가는게 좋을텐데 (energy 소모는 신경안쓰는 경우이므로), 그럼에도 불구하고 energy 줄이는 방향으로 가는 node 존재?
+--> 이 energy 줄이는 방향으로 가는걸 없애주려면 utility_pos_coeff를 5이상으로 잡아줘야함!
+--> reward가 음수로 나와도 상관 없을텐데 utility_pos_coeff 값에 영향을 받는듯?
+--> 현재 설정에서는 utility_pos_coeff 의 영향이 크지 않아 보임
+* 현재설정:
+utility_pos_coeff = 5
+reward = self.utility_pos_coeff + self.utility_coeff * 20 * (goodput - self.last_goodput) - (1-self.utility_coeff) * action
+ep_length = 200
+epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
+
+
+부탁  - To do list
+위의 *현재설정*에서 아래 환경을 시행해 보는데,
+epsode 101~200 에서의 energy, goodput, connectivity ratio 평균을
+num_ep = 100 으로 확인해보기 (100설정 이유 - 우선 빨리 결과 봐보려고!)
+#utility coeff
+python main.py --nw_size 8 --coeff 1.0 --beta 0.0
+python main.py --nw_size 8 --coeff 0.8 --beta 0.0
+python main.py --nw_size 8 --coeff 0.6 --beta 0.0
+python main.py --nw_size 8 --coeff 0.4 --beta 0.0
+python main.py --nw_size 8 --coeff 0.2 --beta 0.0
+python main.py --nw_size 8 --coeff 0.0 --beta 0.0
+
+
+수정한내역
+1. reward function 수정 필요? - goodput 대신 goodput improvement로 변경 (action 자체가 '변화량'이므로)
+    - reward = self.utility_pos_coeff + self.utility_coeff * 20 * (goodput - self.last_goodput) - (1-self.utility_coeff) * action
+    - utility_pos_coeff --> [0, 1]
+    - 20을 곱해주는건, action이 [-1 1] 사이에서 움직이는데 상대적으로 (goodput - self.last_goodput) 의 변화량이 작아서 변화량의 크기를 맞춰주기 위해
+    - utility_pos_coeff = 10 --> reward 음수 안나오는 값으로 때려 박음 -->음수도 상관없으니 0?
+2. 현재의 dqn에서 q_value initializing이 zero로 되어 있는지? 한번 max값으로 해보는건 어떨지? --> optimistic initial values
+    --> 우선 이건 패스! (Q value는 Weight initial해서 나오는값에서 곱해서나오는거라서, Weight initial은 어차피 0이아니얌 xavier 라는 방법써서 랜덤하게나옴. 따라서 임의의값)
+3. [수정완료]max tx_r이 6은 너무 큰 듯? 6이면 3 blocks이라서;; reasonable 실험 setting을 하려면 max 3정도가 적당할듯
+5. [수정완료]지금 source의 tx_r은 항상 2로 fix된거 맞음?
+4. [수정완료]initial tx_r을 source빼고는 다 0부터 시작하는건 어떨지? --> 수정완료
+=====================
+
+
+2018-2-2 off-line meeting
+experiment_setting.txt
+exp.sh
+참고
+
+2018/01/28 off-line meeting
 <민혜>
 - explore vs explison 비율 관련 리서치
 - 전체 시스템 안정화 시키는 parameter 찾아내기
