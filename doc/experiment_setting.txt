@@ -8,8 +8,9 @@
 - figure 1 : learning curve (1 time)
 1.1 step vs energy
 1.2 step vs goodput
-1.3 step vs reward
-1.4 step vs q value
+1.3 step vs coonectivity ratio
+1.4 step vs reward
+1.5 step vs q value
 
 - figure 2 : network formation, shortest path (1 time)
 2.1 early step vs network formation 
