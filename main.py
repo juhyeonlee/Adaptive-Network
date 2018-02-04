@@ -163,17 +163,15 @@ if __name__ == '__main__':
         #plt.show()
         #
         #
-<<<<<<< HEAD
         plt.figure(3)
         plt.plot(range(ep_length+1), reward_trace,'-+')
         plt.xlabel('episode')
         plt.ylabel('reward')
-=======
-        plt.figure(2)
+        
+        plt.figure(4)
         plt.plot(range(ep_length), qvalue_trace,'-+')
         plt.xlabel('episode')
         plt.ylabel('Q value')
->>>>>>> 9f79c32017767f16cf949212b1af90aa610b8d3e
         plt.show()
 
     # Saving the objects:
