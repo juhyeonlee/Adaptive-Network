@@ -1,12 +1,10 @@
 * 구글독스
 https://docs.google.com/document/d/1ZmyRliXf7kwcV5vJDj3YmxJgeLdcQ9qzkEVxDS2ybcw/edit
-* 사용가능 컴퓨터 resource -> 실험 돌려놓으면 본 파일 업데이트 하기
-1. 아마존 서버
-2. MCNL Mac Server: main_exe.py coef=[0.2, 0.4 0.6 0.8], 10번step(100~110) x 10 episode 평균
-3. MCNL Window Server
-4. 민혜 MacBook Pro
-5. 민혜 Window Desktop
-6. 주현 집 Linux Desktop
+
+manuscript_v1.tex --> 이게 main paper file
+suppl_v1.tex --> 이게 supplementary paper file
+* version up 시켜가며 뒤에 이름 붙여서 파일 사용. ex)menuscript_v2_minhae.tex
+* 중간중간 파일 합쳐가며 버전 맞추기
 
 
 ========================
