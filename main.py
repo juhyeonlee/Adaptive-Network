@@ -55,7 +55,7 @@ if __name__ == '__main__':
     # 왜인지 모르겠지만, epsilon_step 이 100을 넘어가면 dqn이 energy를 과도하게 줄이는 방향으로 설정됨
     #epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.1, 'epsilon_step': 100}
     ep_length = 150#00
-    num_ep = 1#000
+    num_ep = 2#000
 
     learning_rate = 0.01
     discount_factor = 0.7
@@ -173,13 +173,13 @@ if __name__ == '__main__':
         plt.xlabel('episode')
         plt.ylabel('Q value')
         plt.show()
-
+    print('processing time ', time.time() - t)
     # Saving the objects:
     with open('var_nw' + str(one_dim) + '_beta' + str(beta) + '_coeff' + str(utility_coeff) + '.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
         pickle.dump([save_reward, save_goodput, save_connect_ratio, save_energy, save_txr], f)
 
     # print('average goodput: ', np.sum(sum_goodput), 'average reward :', np.sum(sum_energy))
 
-    print('processing time ', time.time()-t)
+
 
 
