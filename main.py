@@ -55,7 +55,7 @@ if __name__ == '__main__':
     # 왜인지 모르겠지만, epsilon_step 이 100을 넘어가면 dqn이 energy를 과도하게 줄이는 방향으로 설정됨
     #epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.1, 'epsilon_step': 100}
     ep_length = 150#00
-    num_ep = 2#000
+    num_ep = 1#000
 
     learning_rate = 0.01
     discount_factor = 0.7
@@ -145,19 +145,19 @@ if __name__ == '__main__':
 
         plt.figure(0)
         plt.plot(range(ep_length+1), goodput_trace,'-*')
-        plt.xlabel('episode')
+        plt.xlabel('steps')
         plt.ylabel('goodput')
         #plt.show()
 
         plt.figure(1)
         plt.plot(range(ep_length+1), energy_trace,'-+')
-        plt.xlabel('episode')
+        plt.xlabel('steps')
         plt.ylabel('energy per an agent')
 
 
         plt.figure(2)
         plt.plot(range(ep_length+1), con_ratio_trace,'-+')
-        plt.xlabel('episode')
+        plt.xlabel('steps')
         plt.ylabel('connectivity ratio')
 
         #plt.show()
@@ -165,7 +165,7 @@ if __name__ == '__main__':
         #
         plt.figure(3)
         plt.plot(range(ep_length+1), reward_trace,'-+')
-        plt.xlabel('episode')
+        plt.xlabel('steps')
         plt.ylabel('reward')
         
         plt.figure(4)
