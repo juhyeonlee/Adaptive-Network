@@ -1,0 +1,148 @@
+\documentclass{article}
+
+% Recommended, but optional, packages for figures and better typesetting:
+\usepackage{microtype}
+\usepackage{graphicx}
+%\usepackage{subfigure}
+\usepackage{booktabs} % for professional tables
+\usepackage{amsmath,amssymb,amsfonts}
+\interdisplaylinepenalty=2500
+\usepackage{amstext}
+\usepackage{amsthm}
+\usepackage{amsbsy}
+\usepackage{bbm}
+\usepackage{graphics}
+\usepackage{algorithm}
+\usepackage[noend]{algorithmic}
+%\newcommand\StateX{\Statex\hspace{\algorithmicindent}}
+%\usepackage{algcompatible}
+%\usepackage[noend]{algpseudocode}
+%\usepackage{subfigure}
+\usepackage{cite}
+%\usepackage{slashbox}
+\usepackage{multirow}
+%\usepackage{hangcaption}
+%\renewcommand{\baselinestretch}{1.45}
+\usepackage{pdfsync}
+\usepackage{epstopdf} 
+\usepackage{color}
+%\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption} 
+\usepackage{enumitem}
+\usepackage{xr}
+\externaldocument{manuscript_v1}
+
+
+\newtheorem{theorem}{{Theorem}}
+\newtheorem{lemma}[theorem]{{Lemma}}
+\newtheorem{property}[theorem]{{Property}}
+\newtheorem{proposition}[theorem]{{Proposition}}
+\newtheorem{corollary}[theorem]{{Corollary}}
+\newtheorem{definition}{{Definition}}
+\newtheorem{example}{{Example}}
+
+\usepackage[labelformat=simple]{subcaption}
+\renewcommand\thesubfigure{(\alph{subfigure})}
+% hyperref makes hyperlinks in the resulting PDF.
+% If your build breaks (sometimes temporarily if a hyperlink spans a page)
+% please comment out the following usepackage line and replace
+% \usepackage{icml2018} with \usepackage[nohyperref]{icml2018} above.
+\usepackage{hyperref}
+
+% Attempt to make hyperref and algorithmic work together better:
+\newcommand{\theHalgorithm}{\arabic{algorithm}}
+
+% Use the following line for the initial blind version submitted for review:
+\usepackage{icml2018}
+
+% If accepted, instead use the following line for the camera-ready submission:
+%\usepackage[accepted]{icml2018}
+
+% The \icmltitle you define below is probably too long as a header.
+% Therefore, a short form for the running title is supplied here:
+\icmltitlerunning{Distributed Network Evolution Strategy for Autonomous Robot Swarm}
+
+\begin{document}
+\onecolumn
+
+%\twocolumn[
+\icmltitle{Supplementary Material: \\
+Distributed Network Evolution Strategy for Autonomous Robot Swarm}
+
+% It is OKAY to include author information, even for blind
+% submissions: the style file will automatically remove it for you
+% unless you've provided the [accepted] option to the icml2018
+% package.
+
+% List of affiliations: The first argument should be a (short)
+% identifier you will use later to specify author affiliations
+% Academic affiliations should list Department, University, City, Region, Country
+% Industry affiliations should list Company, City, Region, Country
+
+% You can specify symbols, otherwise they are numbered in order.
+% Ideally, you should not use this facility. Affiliations will be numbered
+% in order of appearance and this is the preferred way.
+\icmlsetsymbol{equal}{*}
+
+\begin{icmlauthorlist}
+\icmlauthor{Aeiau Zzzz}{equal,to}
+\icmlauthor{Bauiu C.~Yyyy}{equal,to,goo}
+\icmlauthor{Cieua Vvvvv}{goo}
+\icmlauthor{Iaesut Saoeu}{ed}
+\icmlauthor{Fiuea Rrrr}{to}
+\icmlauthor{Tateu H.~Yasehe}{ed,to,goo}
+\icmlauthor{Aaoeu Iasoh}{goo}
+\icmlauthor{Buiui Eueu}{ed}
+\icmlauthor{Aeuia Zzzz}{ed}
+\icmlauthor{Bieea C.~Yyyy}{to,goo}
+\icmlauthor{Teoau Xxxx}{ed}
+\icmlauthor{Eee Pppp}{ed}
+\end{icmlauthorlist}
+
+\icmlaffiliation{to}{Department of Computation, University of Torontoland, Torontoland, Canada}
+\icmlaffiliation{goo}{Googol ShallowMind, New London, Michigan, USA}
+\icmlaffiliation{ed}{School of Computation, University of Edenborrow, Edenborrow, United Kingdom}
+
+\icmlcorrespondingauthor{Cieua Vvvvv}{c.vvvvv@googol.com}
+\icmlcorrespondingauthor{Eee Pppp}{ep@eden.co.uk}
+
+% You may provide any keywords that you
+% find helpful for describing your paper; these are used to populate
+% the "keywords" metadata in the PDF but will not be shown in the document
+\icmlkeywords{Machine Learning, ICML}
+
+\vskip 0.3in
+%]
+% This command actually creates the footnote in the first column
+% listing the affiliations and the copyright notice.
+% The command takes one argument, which is text to display at the start of the footnote.
+% The \icmlEqualContribution command is standard text for equal contribution.
+% Remove it (just {}) if you do not need this facility.
+
+%\printAffiliationsAndNotice{}  % leave blank if no need to mention equal contribution
+\printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
+
+ 
+\appendix
+
+
+\section{Source Reconstruction at Terminal Nodes }%ecoding Process of Network Coding and Its Characteristics}
+\label{sec:decoding}
+
+
+Let 
+%$\mathcal S_i = \{ v_j| v_i \in \mathcal
+%D_j, \forall j \in \mathcal V(\mathcal G) \}$
+%be a set of source nodes 
+%whose destination set includes $v_i$ and let 
+$\mathbf H_t = \{ h | t \in \mathbf T_h, \forall h \in \mathbf H \}$ 
+%v_h \in \mathcal S_i \}$ 
+be 
+
+\bibliographystyle{icml2018}
+\bibliography{IEEEabrv,RLbibfile_v1}
+
+\end{document}
+
+
