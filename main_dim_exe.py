@@ -74,7 +74,7 @@ if __name__ == '__main__':
     mean_energy = []#np.zeros(len(utility_coeff_space), dtype=np.float32)
     mean_con_ratio = []#np.zeros(len(utility_coeff_space), dtype=np.float32)
 
-    for one_dim in enumerate(one_dim_space):
+    for one_dim in one_dim_space:
     #for utility_coeff in enumerate(utility_coeff_space) :
 
         mean_goodput_trace = []
