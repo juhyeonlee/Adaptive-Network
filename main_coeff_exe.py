@@ -60,13 +60,13 @@ if __name__ == '__main__':
     # 왜인지 모르겠지만, epsilon_step 이 100을 넘어가면 dqn이 energy를 과도하게 줄이는 방향으로 설정됨
     #epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.1, 'epsilon_step': 100}
     ep_length = 150#00
-    num_ep = 2#000
+    num_ep = 50#000
 
     learning_rate = 0.01
     discount_factor = 0.7
 
     beta = args.beta
-    utility_coeff_space = [0.0, 0.2,  0.5, 0.8, 1.0]
+    utility_coeff_space = [0.0, 0.2,  0.4, 0.6, 0.8, 1.0]
     ########################
 
     mean_goodput = []# np.zeros(len(utility_coeff_space), dtype=np.float32)

@@ -20,7 +20,7 @@ if __name__ == '__main__':
     # beta_set = [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3]
     parser = argparse.ArgumentParser()
     parser.add_argument("--nw_size", help="network size", type=int, default=7)
-    parser.add_argument("--coeff", help="utility coeff", type=float, default=0.8)
+    parser.add_argument("--coeff", help="utility coeff", type=float, default=0.2)
     parser.add_argument("--beta", help="beta, link failure rate", type=float, default=0.0)
     args = parser.parse_args()
 
@@ -54,7 +54,7 @@ if __name__ == '__main__':
     epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
     # 왜인지 모르겠지만, epsilon_step 이 100을 넘어가면 dqn이 energy를 과도하게 줄이는 방향으로 설정됨
     #epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.1, 'epsilon_step': 100}
-    ep_length = 150#00
+    ep_length = 300#00
     num_ep = 1#000
 
     learning_rate = 0.01

@@ -12,7 +12,7 @@ suppl_v1.tex --> 이게 supplementary paper file
 - tcle, Value iteration 실험환경 동일하게 해서 돌려놓기
 - manuscript 작성 시작
 
-주현 오늘밤? 할일
+주현 오늘밤?+내일 할일
 - manuscript 작성시작
 
 ========================
