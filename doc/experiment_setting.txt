@@ -2,8 +2,6 @@
 2. network shortest path 보여지게 plot 짜기
 
 
-- 지금 너무 randomness가 높아서 connection이 아예 끊어지는 경우도 많은 것 같아 걱정..
-
 
 - figure 1 : learning curve (1 time)
 1.1 step vs energy
@@ -29,6 +27,7 @@
 5.1 utility coefficient vs goodput
 5.2 utiltiy coefficient vs connectivity ratio
 5.3 utiltiy coefficient vs energy
+--> 이건 보류
 
 - figure 6: beta coefficient change (1000 times save, range: 0.0 0.15, 0.3)
 6.1 beta vs goodput

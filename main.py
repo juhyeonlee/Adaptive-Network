@@ -145,19 +145,19 @@ if __name__ == '__main__':
 
         plt.figure(0)
         plt.plot(range(ep_length+1), goodput_trace,'-*')
-        plt.xlabel('episode')
+        plt.xlabel('steps')
         plt.ylabel('goodput')
         #plt.show()
 
         plt.figure(1)
         plt.plot(range(ep_length+1), energy_trace,'-+')
-        plt.xlabel('episode')
+        plt.xlabel('steps')
         plt.ylabel('energy per an agent')
 
 
         plt.figure(2)
         plt.plot(range(ep_length+1), con_ratio_trace,'-+')
-        plt.xlabel('episode')
+        plt.xlabel('steps')
         plt.ylabel('connectivity ratio')
 
         #plt.show()
@@ -165,7 +165,7 @@ if __name__ == '__main__':
         #
         plt.figure(3)
         plt.plot(range(ep_length+1), reward_trace,'-+')
-        plt.xlabel('episode')
+        plt.xlabel('steps')
         plt.ylabel('reward')
         
         plt.figure(4)
@@ -173,13 +173,13 @@ if __name__ == '__main__':
         plt.xlabel('episode')
         plt.ylabel('Q value')
         plt.show()
-
+    print('processing time ', time.time() - t)
     # Saving the objects:
     with open('var_nw' + str(one_dim) + '_beta' + str(beta) + '_coeff' + str(utility_coeff) + '.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
         pickle.dump([save_reward, save_goodput, save_connect_ratio, save_energy, save_txr], f)
 
     # print('average goodput: ', np.sum(sum_goodput), 'average reward :', np.sum(sum_energy))
 
-    print('processing time ', time.time()-t)
+
 
 
