@@ -20,7 +20,7 @@ if __name__ == '__main__':
     # beta_set = [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3]
     parser = argparse.ArgumentParser()
     parser.add_argument("--nw_size", help="network size", type=int, default=7)
-    parser.add_argument("--coeff", help="utility coeff", type=float, default=0.2)
+    parser.add_argument("--coeff", help="utility coeff", type=float, default=0.8)
     parser.add_argument("--beta", help="beta, link failure rate", type=float, default=0.0)
     args = parser.parse_args()
 
@@ -72,6 +72,7 @@ if __name__ == '__main__':
 
 
     for episode in range(num_ep):
+        print("num ep", episode)
         state, num_players = env.reset(init_txr, beta) # len(state) =  num_players + 4
         agent = []
         tf.reset_default_graph()
@@ -102,7 +103,7 @@ if __name__ == '__main__':
             #print('energy per an agent: ',np.sum(energy)/num_players )
 
             for i in range(len(state) - 4):
-                agent[i].learn(state[i], action[i], reward[i], next_state[i])
+                agent[i].learn(state[i], action[i], reward[i], next_state[i], 100)
 
             state = next_state
 
@@ -167,7 +168,7 @@ if __name__ == '__main__':
         plt.plot(range(ep_length+1), reward_trace,'-+')
         plt.xlabel('steps')
         plt.ylabel('reward')
-        
+
         plt.figure(4)
         plt.plot(range(ep_length), qvalue_trace,'-+')
         plt.xlabel('episode')
@@ -179,7 +180,4 @@ if __name__ == '__main__':
         pickle.dump([save_reward, save_goodput, save_connect_ratio, save_energy, save_txr], f)
 
     # print('average goodput: ', np.sum(sum_goodput), 'average reward :', np.sum(sum_energy))
-
-
-
 
