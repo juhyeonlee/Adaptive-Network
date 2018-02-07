@@ -5,6 +5,7 @@ import tensorflow as tf
 import os
 import pickle
 import argparse
+import time
 
 
 from env import Environment
@@ -19,7 +20,7 @@ if __name__ == '__main__':
     # beta_set = [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3]
     parser = argparse.ArgumentParser()
     parser.add_argument("--nw_size", help="network size", type=int, default=7)
-    parser.add_argument("--coeff", help="utility coeff", type=float, default=0.8)
+    parser.add_argument("--coeff", help="utility coeff", type=float, default=0.2)
     parser.add_argument("--beta", help="beta, link failure rate", type=float, default=0.0)
     args = parser.parse_args()
 
@@ -53,7 +54,7 @@ if __name__ == '__main__':
     epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
     # 왜인지 모르겠지만, epsilon_step 이 100을 넘어가면 dqn이 energy를 과도하게 줄이는 방향으로 설정됨
     #epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.1, 'epsilon_step': 100}
-    ep_length = 200#00
+    ep_length = 300#00
     num_ep = 1#000
 
     learning_rate = 0.01
@@ -66,6 +67,8 @@ if __name__ == '__main__':
 
     n_actions = env.n_actions
     action_space = env.action_space
+
+    t = time.time()
 
 
     for episode in range(num_ep):
@@ -142,33 +145,41 @@ if __name__ == '__main__':
 
         plt.figure(0)
         plt.plot(range(ep_length+1), goodput_trace,'-*')
-        plt.xlabel('episode')
+        plt.xlabel('steps')
         plt.ylabel('goodput')
         #plt.show()
 
         plt.figure(1)
         plt.plot(range(ep_length+1), energy_trace,'-+')
-        plt.xlabel('episode')
+        plt.xlabel('steps')
         plt.ylabel('energy per an agent')
 
 
         plt.figure(2)
         plt.plot(range(ep_length+1), con_ratio_trace,'-+')
-        plt.xlabel('episode')
+        plt.xlabel('steps')
         plt.ylabel('connectivity ratio')
 
-        plt.show()
+        #plt.show()
         #
         #
-        plt.figure(2)
+        plt.figure(3)
+        plt.plot(range(ep_length+1), reward_trace,'-+')
+        plt.xlabel('steps')
+        plt.ylabel('reward')
+        
+        plt.figure(4)
         plt.plot(range(ep_length), qvalue_trace,'-+')
         plt.xlabel('episode')
         plt.ylabel('Q value')
         plt.show()
-
+    print('processing time ', time.time() - t)
     # Saving the objects:
     with open('var_nw' + str(one_dim) + '_beta' + str(beta) + '_coeff' + str(utility_coeff) + '.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
         pickle.dump([save_reward, save_goodput, save_connect_ratio, save_energy, save_txr], f)
 
     # print('average goodput: ', np.sum(sum_goodput), 'average reward :', np.sum(sum_energy))
+
+
+
 

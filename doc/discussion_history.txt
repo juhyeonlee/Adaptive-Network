@@ -1,5 +1,19 @@
+* 구글독스
 https://docs.google.com/document/d/1ZmyRliXf7kwcV5vJDj3YmxJgeLdcQ9qzkEVxDS2ybcw/edit
 
+manuscript_v1.tex --> 이게 main paper file
+suppl_v1.tex --> 이게 supplementary paper file
+* version up 시켜가며 뒤에 이름 붙여서 파일 사용. ex)menuscript_v2_minhae.tex
+* 중간중간 파일 합쳐가며 버전 맞추기
+
+===========
+2018-02-05
+민혜 내일 할일
+- tcle, Value iteration 실험환경 동일하게 해서 돌려놓기
+- manuscript 작성 시작
+
+주현 오늘밤?+내일 할일
+- manuscript 작성시작
 
 ========================
 2018-02-04
