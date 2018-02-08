@@ -53,7 +53,7 @@ class DQNAgent:
         self.count += 1
         return action, q_value[0]
 
-    def learn(self, state, action, reward, next_state):
+    def learn(self, state, action, reward, next_state, update_step):
         next_state = np.reshape(next_state, [1, self.n_state])
         # next_state = next_state / 100.0
         state = np.reshape(state, [1, self.n_state])
@@ -68,7 +68,7 @@ class DQNAgent:
                                                         self.target_q: [target_q],
                                                         self.action: [action_idx]})
 
-        if self.count % 100 == 0:
+        if self.count % update_step == 0:
             self.target_network.run_copy()
 
     def get_greedy_action(self, state):

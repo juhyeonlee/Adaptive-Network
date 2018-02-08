@@ -1,2 +1,2 @@
-model_checkpoint_path: "model_ep0_nw7_beta0.0_coeff0.2.ckpt"
-all_model_checkpoint_paths: "model_ep0_nw7_beta0.0_coeff0.2.ckpt"
+model_checkpoint_path: "model_ep7_nw5_beta0.0_coeff0.8180206-221951.ckpt"
+all_model_checkpoint_paths: "model_ep7_nw5_beta0.0_coeff0.8180206-221951.ckpt"

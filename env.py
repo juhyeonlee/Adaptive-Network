@@ -56,8 +56,8 @@ class Environment:
         self.txr[len(self.txr) - 4] = self.s_init_txr
         self.txr[len(self.txr) - 3] = self.s_init_txr
         self.last_txr = self.txr
-        print("action: ", action)
-        print("updated TX range: ", self.txr)
+        #print("action: ", action)
+        #print("updated TX range: ", self.txr)
         energy = self.txr ** 2
 
         # adjacent matrix
@@ -110,8 +110,8 @@ class Environment:
                     path.append([])
                     dist.append(np.inf)
 
-        print("path between sources and destinations: ", path)
-        print("distance: ", dist)
+        #print("path between sources and destinations: ", path)
+        #print("distance: ", dist)
 
         # calculate connectivity ratio and goodput
         # connectivity ratio: the number of connected path, max 1.0 (source 2 * dest 2 ) / 4
@@ -132,9 +132,9 @@ class Environment:
         #reward = self.utility_pos_coeff + self.utility_coeff * (goodput - self.last_goodput) - action
         reward = self.utility_pos_coeff + self.utility_coeff * 20 * (goodput - self.last_goodput) - (1-self.utility_coeff) * action
 
-        print('goodput improvement ',  goodput - self.last_goodput)
-        print('action', action)
-        print("reward: ", reward)
+        #print('goodput improvement ',  goodput - self.last_goodput)
+        #print('action', action)
+        #print("reward: ", reward)
         reward = reward / 10.  # rescaling reward to train NN stable
         # print("reward: ", reward)
         # next state
@@ -210,8 +210,8 @@ class Environment:
                                    np.sum(self.no_events[0:(t + 1) * self.one_dim - 1]))]
 
         self.num_players = len(self.players)
-        print("num of players: ", self.num_players)
-        print("players index: ", self.players)
+        #print("num of players: ", self.num_players)
+        #print("players index: ", self.players)
 
         for b in range(self.max_block):
             for n in range(self.no_events[b]):
@@ -227,7 +227,7 @@ class Environment:
 
         # distance matrix
         self.num_node = len(self.node_loc)
-        print("num of nodes: ", self.num_node)
+        #print("num of nodes: ", self.num_node)
 
         self.d = np.zeros((self.num_node, self.num_node))
         for f in range(self.num_node):
