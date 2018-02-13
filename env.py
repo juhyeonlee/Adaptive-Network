@@ -43,7 +43,7 @@ class Environment:
                 self.block_coords[i, :] = [c1, c2]
                 i += 1
 
-    def step(self, action, steps):
+    def step(self, action, steps, ep):
 
         self.txr = self.last_txr + action
         # txr is between 0 and 6
@@ -76,27 +76,6 @@ class Environment:
                     G.add_edges_from([(i, j)])
         # red coloring for source and destination nodes
 
-        plt.clf()
-        if steps % 300 == 0 and steps != 0:
-            val_map = {self.num_node - 1: 0.57,
-                       self.num_node - 2: 0.57,
-                       self.num_node - 3: 0.57,
-                       self.num_node - 4: 0.57}
-            values = [val_map.get(node, 0.1) for node in G.nodes()]
-            labels = {}
-            for node in G.nodes():
-                labels[node] = str(node)
-            nx.draw_networkx_nodes(G, self.node_loc, cmap=plt.get_cmap('jet'),
-                                   node_color=values, node_size=10)
-            nx.draw_networkx_labels(G, self.node_loc, labels=labels, font_size=10)
-            nx.draw_networkx_edges(G, self.node_loc, edge_color='c', arrows=True)
-            # for idx, p in enumerate(pp):
-            #     circle = plt.Circle(self.node_loc[p], self.txr[idx], edgecolor='r', facecolor='none')
-            #     plt.gca().add_patch(circle)
-
-            plt.grid()
-            plt.savefig('net2_' + str(steps) + '.png', dpi=500)
-
         # find shortest path between sources and destinations (2 * 2)
         dist = []
         path = []
@@ -110,20 +89,53 @@ class Environment:
                     path.append([])
                     dist.append(np.inf)
 
-        #print("path between sources and destinations: ", path)
-        #print("distance: ", dist)
+        # print("path between sources and destinations: ", path)
+        # print("distance: ", dist)
+
+        plt.clf()
+        if steps % 30 == 0:
+            val_map = {self.num_node - 1: 0.57,
+                       self.num_node - 2: 0.57,
+                       self.num_node - 3: 0.57,
+                       self.num_node - 4: 0.57}
+            values = [val_map.get(node, 0.1) for node in G.nodes()]
+            labels = {}
+            for node in G.nodes():
+                labels[node] = str(node)
+            nx.draw_networkx_nodes(G, self.node_loc, cmap=plt.get_cmap('jet'),
+                                   node_color=values, node_size=10)
+            nx.draw_networkx_labels(G, self.node_loc, labels=labels, font_size=8)
+            nx.draw_networkx_edges(G, self.node_loc, edge_color='c', arrows=True)
+            for p in path:
+                if len(p) is not 0:
+                    path_edges = zip(p, p[1:])
+                    # print(list(path_edges))
+                    nx.draw_networkx_nodes(G, self.node_loc,  nodelist=p, node_color='r', node_size=10)
+                    nx.draw_networkx_edges(G, self.node_loc, edgelist=list(path_edges), edge_color='r', arrows=True)
+
+            # for idx, p in enumerate(pp):
+            #     if self.txr[idx] > 0.5:
+            #         circle = plt.Circle(self.node_loc[p], self.txr[idx], edgecolor='r', facecolor='none')
+            #         plt.gca().add_patch(circle)
+
+            plt.grid()
+            plt.figure(10)
+            plt.savefig('fig1_one_trial_network' + str(steps) + '_' + str(ep)+'.eps')
+
+
 
         # calculate connectivity ratio and goodput
-        # connectivity ratio: the number of connected path, max 1.0 (source 2 * dest 2 ) / 4
+        # connectivity ratio:
+        #  the number of connected path, max 1.0 (source 2 * dest 2 ) / 4
         connectivity_ratio = 0.
         for i in range(4):
             if dist[i] is not np.inf:
                 connectivity_ratio += 1.
         connectivity_ratio /= 4.
         goodput = np.sum(np.divide(1., dist))
-        print("connectivity ratio: ", connectivity_ratio)
-        print("goodput: ", goodput)
-        print("=======================")
+        # print("connectivity ratio: ", connectivity_ratio)
+        # print("goodput: ", goodput)
+        # print("=======================")
         #TODO: constant for positive value
         # reward = goodput  - action * (0.4)
         # reward = self.utility_pos_coeff +connectivity_ratio * ( goodput * self.utility_coeff - action)
@@ -132,9 +144,9 @@ class Environment:
         #reward = self.utility_pos_coeff + self.utility_coeff * (goodput - self.last_goodput) - action
         reward = self.utility_pos_coeff + self.utility_coeff * 20 * (goodput - self.last_goodput) - (1-self.utility_coeff) * action
 
-        #print('goodput improvement ',  goodput - self.last_goodput)
-        #print('action', action)
-        #print("reward: ", reward)
+        # print('goodput improvement ',  goodput - self.last_goodput)
+        # print('action', action)
+        # print("reward: ", reward)
         reward = reward / 10.  # rescaling reward to train NN stable
         # print("reward: ", reward)
         # next state

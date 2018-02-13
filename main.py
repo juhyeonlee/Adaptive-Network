@@ -54,8 +54,8 @@ if __name__ == '__main__':
     epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
     # 왜인지 모르겠지만, epsilon_step 이 100을 넘어가면 dqn이 energy를 과도하게 줄이는 방향으로 설정됨
     #epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.1, 'epsilon_step': 100}
-    ep_length = 300#00
-    num_ep = 1#000
+    ep_length = 150 #200#00
+    num_ep = 30#000
 
     learning_rate = 0.01
     discount_factor = 0.7
@@ -89,6 +89,7 @@ if __name__ == '__main__':
         con_ratio_trace = []
         txr_trace = []
         qvalue_trace = []
+        sum_reward = 0.0
         for steps in range(ep_length):
             print('step number: ,', steps)
             #beta_idx = steps//(ep_length/len(beta_set))
@@ -96,7 +97,7 @@ if __name__ == '__main__':
             for i in range(len(state) - 4):
                 action[i], q_value[i] = agent[i].get_action(state[i])
             # print('action check:', action)
-            next_state, reward, goodput, energy, con_ratio = env.step(action, steps)
+            next_state, reward, goodput, energy, con_ratio = env.step(action, steps, episode)
 
             #print('total energy sum: ', np.sum(energy))
             #print('number of agemts: ',num_players )
@@ -106,9 +107,9 @@ if __name__ == '__main__':
                 agent[i].learn(state[i], action[i], reward[i], next_state[i], 100)
 
             state = next_state
-
+            sum_reward += np.mean(reward)
             goodput_trace.append(goodput)
-            reward_trace.append(np.mean(reward))
+            reward_trace.append(sum_reward)
             energy_trace.append(np.sum(energy)/num_players) #energy per an agent
             #print('energy trace: ', energy_trace)
             con_ratio_trace.append(con_ratio)
@@ -119,7 +120,7 @@ if __name__ == '__main__':
         # test
         for i in range(len(state) - 4):
             action[i] = agent[i].get_greedy_action(state[i])
-        next_state, reward, goodput, energy, con_ratio = env.step(action, ep_length)
+        next_state, reward, goodput, energy, con_ratio = env.step(action, ep_length, episode)
         goodput_trace.append(goodput)
         reward_trace.append(np.mean(reward))
         energy_trace.append(np.sum(energy)/num_players) #energy per an agent
@@ -144,40 +145,62 @@ if __name__ == '__main__':
         # print('goodput trace: ', goodput_trace)
         # print('reward trace :', reward_trace)
 
+        plt.clf()
         plt.figure(0)
-        plt.plot(range(ep_length+1), goodput_trace,'-*')
-        plt.xlabel('steps')
-        plt.ylabel('goodput')
+        plt.plot(range(ep_length+1), goodput_trace,'-')
+        plt.xlabel('Steps')
+        plt.ylabel('Goodput')
+        plt.savefig('fig1_one_trial_goodput' +str(episode)+ '.eps')
         #plt.show()
 
-        plt.figure(1)
-        plt.plot(range(ep_length+1), energy_trace,'-+')
-        plt.xlabel('steps')
-        plt.ylabel('energy per an agent')
+        plt.clf()
+        plt.figure(11)
+        plt.plot(range(ep_length+1), energy_trace,'-')
+        plt.xlabel('Steps')
+        plt.ylabel('Energy')
+        plt.savefig('fig1_one_trial_energy.eps')
 
-
+        plt.clf()
         plt.figure(2)
-        plt.plot(range(ep_length+1), con_ratio_trace,'-+')
-        plt.xlabel('steps')
-        plt.ylabel('connectivity ratio')
+        plt.plot(range(ep_length+1), con_ratio_trace,'-')
+        plt.xlabel('Steps')
+        plt.ylabel('Connectivity Ratio')
+        plt.savefig('fig1_one_trial_cr' +str(episode)+ '.eps')
 
         #plt.show()
         #
         #
+        plt.clf()
         plt.figure(3)
-        plt.plot(range(ep_length+1), reward_trace,'-+')
-        plt.xlabel('steps')
-        plt.ylabel('reward')
+        plt.plot(range(ep_length+1), reward_trace,'-')
+        plt.xlabel('Steps')
+        plt.ylabel('Cumulative Reward')
+        plt.savefig('fig1_one_trial_reward' +str(episode)+ '.eps')
 
+        plt.clf()
         plt.figure(4)
-        plt.plot(range(ep_length), qvalue_trace,'-+')
-        plt.xlabel('episode')
+        plt.plot(range(ep_length), qvalue_trace,'-')
+        plt.xlabel('Stpes')
         plt.ylabel('Q value')
-        plt.show()
-    print('processing time ', time.time() - t)
-    # Saving the objects:
-    with open('var_nw' + str(one_dim) + '_beta' + str(beta) + '_coeff' + str(utility_coeff) + '.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
-        pickle.dump([save_reward, save_goodput, save_connect_ratio, save_energy, save_txr], f)
+        plt.savefig('fig1_one_trial_qvalue' +str(episode)+ '.eps')
+
+        print('processing time ', time.time() - t)
+
+        txr_mat = save_txr[0]  # np.mean(save_txr, axis=0)
+        txr_colormat = []
+        for i in range(len(txr_mat)):
+            txr_colormat.append(txr_mat[i][:-4])
+        plt.clf()
+        plt.figure(5)
+        plt.matshow(txr_colormat, cmap='pink', aspect=0.5)  # defaults
+        plt.xlabel('The Index of Nodes')
+        plt.ylabel('Steps')
+        a = plt.colorbar(fraction=0.046, pad=0.04)
+        a.set_label('Radius of Transmission Range')
+        plt.savefig('fig1_one_trial_color' +str(episode)+ '.eps')
+        # plt.show()
+        with open(str(episode) + 'onetime_var_nw' + str(one_dim) + '_beta' + str(beta) + '_coeff' + str(utility_coeff) + '.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
+            pickle.dump([save_reward, save_goodput, save_connect_ratio, save_energy, save_txr], f)
 
     # print('average goodput: ', np.sum(sum_goodput), 'average reward :', np.sum(sum_energy))
 
