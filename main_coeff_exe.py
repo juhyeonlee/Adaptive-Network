@@ -19,7 +19,7 @@ if __name__ == '__main__':
     # utility_coeff_set = [1.0, 3.0, 5.0, 7.0]
     # beta_set = [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3]
     parser = argparse.ArgumentParser()
-    parser.add_argument("--nw_size", help="network size", type=int, default=7)
+    parser.add_argument("--nw_size", help="network size", type=int, default=5)
     parser.add_argument("--coeff", help="utility coeff", type=float, default=0.8)
     parser.add_argument("--beta", help="beta, link failure rate", type=float, default=0.0)
     args = parser.parse_args()
@@ -59,8 +59,8 @@ if __name__ == '__main__':
     epsilon = {'epsilon_start': 1.0, 'epsilon_end': 0.01, 'epsilon_step': 100}
     # 왜인지 모르겠지만, epsilon_step 이 100을 넘어가면 dqn이 energy를 과도하게 줄이는 방향으로 설정됨
     #epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.1, 'epsilon_step': 100}
-    ep_length = 150#00
-    num_ep = 50#000
+    ep_length = 110#00
+    num_ep = 500#000
 
     learning_rate = 0.01
     discount_factor = 0.7
@@ -164,7 +164,7 @@ if __name__ == '__main__':
             save_num_players.append(num_players)
 
             # tensor flow parameter saver
-            saver.save(sess, './model/model_ep'+ str(episode) + '_nw' + str(one_dim) + '_beta' + str(beta) + '_coeff' + str(utility_coeff) + '.ckpt')
+            saver.save(sess, './model/model_ep'+ str(episode) + '_nw' + str(one_dim) + '_beta' + str(beta) + '_coeff' + str(utility_coeff) + '_ep' + str(num_ep) + '_step' +str(ep_length-epsilon['epsilon_step'])+str(time.strftime("%y%m%d-%H%M%S")) + '.ckpt')
             t_episode_end = time.time()
 
         # for every ceoff
@@ -216,34 +216,33 @@ if __name__ == '__main__':
             # plt.title('coef:', utility_coeff)
             # plt.show()
 
-
-    plt.figure(0)
-    plt.plot(utility_coeff_space, mean_goodput, '-*')
-    plt.xlabel('episode')
-    plt.ylabel('goodput')
-    #plt.title('coef:', utility_coeff)
-    # plt.show()
-    plt.figure(1)
-    plt.plot(utility_coeff_space, mean_energy, '-*')
-    plt.xlabel('episode')
-    plt.ylabel('energy')
-    #plt.title('coef:', utility_coeff)
-    # plt.show()
-    plt.figure(2)
-    plt.plot(utility_coeff_space, mean_con_ratio, '-*')
-    plt.xlabel('episode')
-    plt.ylabel('connectivity')
-    #plt.title('coef:', utility_coeff)
-    plt.show()
-
+    print('goodput: ', mean_goodput, 'energy', mean_energy, 'connectivity', mean_con_ratio)
     print('processing time ', time.time() - t_start)
 
+
     # Saving the objects:
-    with open('var_nw' + str(one_dim) + '_beta' + str(beta) + '_coeff_space' + str(utility_coeff_space) + '.pkl', 'wb') as f:  # Python 3: open(..., 'wb') # wb: write binary #rb: read binary
+    with open('var_nw' + str(one_dim) + '_beta' + str(beta) + '_coeff_space' + str(utility_coeff_space) + str(time.strftime("%y%m%d-%H%M%S")) +  '.pkl', 'wb') as f:  # Python 3: open(..., 'wb') # wb: write binary #rb: read binary
         pickle.dump([save_num_players, save_reward, save_goodput, save_connect_ratio, save_energy, save_txr, mean_goodput, mean_energy, mean_con_ratio], f)
 
     # print('average goodput: ', np.sum(sum_goodput), 'average reward :', np.sum(sum_energy))
 
 
-
+    plt.figure(0)
+    plt.plot(utility_coeff_space, mean_goodput, '-*')
+    plt.xlabel('coeff')
+    plt.ylabel('goodput')
+    #plt.title('coef:', utility_coeff)
+    # plt.show()
+    plt.figure(1)
+    plt.plot(utility_coeff_space, mean_energy, '-*')
+    plt.xlabel('coeff')
+    plt.ylabel('energy')
+    #plt.title('coef:', utility_coeff)
+    # plt.show()
+    plt.figure(2)
+    plt.plot(utility_coeff_space, mean_con_ratio, '-*')
+    plt.xlabel('coeff')
+    plt.ylabel('connectivity')
+    #plt.title('coef:', utility_coeff)
+    plt.show()
 
