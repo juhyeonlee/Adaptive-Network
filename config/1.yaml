@@ -1,0 +1,18 @@
+
+# environment settings
+
+nw_size:
+mu: 0.8
+init_txr:
+utility_coeff:
+utility_pos_coeff:
+beta:
+
+??action_space
+
+
+# learning settings
+lr:
+max_ep:
+ep_length:
+gamma: # discount factor

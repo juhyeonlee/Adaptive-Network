@@ -5,13 +5,14 @@ import networkx as nx
 import matplotlib.pyplot as plt
 
 
-class Environment:
-    def __init__(self, dims, mu, init_txr, utility_coeff, utility_pos_coeff, action_space):
-        self.one_dim = dims
-        self.max_block = self.one_dim ** 2
-        self.mu = mu # node density
-        self.beta = 0.0
-        self.init_txr = init_txr
+class AdhocNetEnv:
+    def __init__(self, args):
+        self.nw_size = args.nw_size
+        self.num_blocks = args.nw_size ** 2
+
+        self.mu = args.mu # node density
+        self.beta = args.beta # noise
+        self.init_txr = args.init_txr
         self.txr = None
         #self.action_space = [-3, -2, -1, 0, 1, 2, 3]
         self.action_space = action_space
@@ -20,9 +21,8 @@ class Environment:
         self.s_init_txr = 2.0
 
         # node state
-        self.block_coords = np.zeros((self.max_block, 2))
-        self.no_events = np.zeros(self.max_block, dtype=np.int32)
-        self.coords = []
+        self.block_coords = np.zeros((self.num_blocks, 2))
+        self.num_agents_in_blocks = np.zeros(self.num_blocks, dtype=np.int32)
         self.players = []
         self.node_loc = []
         self.num_players = 0
@@ -33,13 +33,13 @@ class Environment:
         self.beta_matrix = None
 
         # reward parameters
-        self.utility_coeff = utility_coeff # weight on goodput
-        self.utility_pos_coeff = utility_pos_coeff # to make utiltiy to be positive
+        self.utility_coeff = args.utility_coeff # weight on goodput
+        self.utility_pos_coeff = args.utility_pos_coeff # to make utiltiy to be positive
 
         # default coordination for each block
         i = 0
-        for c2 in range(0, 2 * self.one_dim - 1, 2):
-            for c1 in range(0, 2 * self.one_dim - 1, 2):
+        for c2 in range(0, 2 * self.nw_size - 1, 2):
+            for c1 in range(0, 2 * self.nw_size - 1, 2):
                 self.block_coords[i, :] = [c1, c2]
                 i += 1
 
@@ -152,23 +152,23 @@ class Environment:
         # next state
         #TODO: only change node location
         # change node location
-        self.coords = []
-        for block in range(self.max_block):
+        agents_coords = []
+        for block in range(self.num_blocks):
             # random location
-            self.coords.append(2 * np.random.rand(self.no_events[block], 2))
+            agents_coords.append(2 * np.random.rand(self.num_agents_in_blocks[block], 2))
 
         self.node_loc = []
-        for b in range(self.max_block):
-            for n in range(self.no_events[b]):
-                self.node_loc.append(self.block_coords[b] + self.coords[b][n])
+        for b in range(self.num_blocks):
+            for n in range(self.num_agents_in_blocks[b]):
+                self.node_loc.append(self.block_coords[b] + agents_coords[b][n])
 
         # two source nodes: fixed location
-        self.node_loc.append([2, 2 * (self.one_dim - 1)])
-        self.node_loc.append([2 * (self.one_dim - 1), 2 * (self.one_dim - 1)])
+        self.node_loc.append([2, 2 * (self.nw_size - 1)])
+        self.node_loc.append([2 * (self.nw_size - 1), 2 * (self.nw_size - 1)])
 
         # two destination nodes: fixed location
         self.node_loc.append([2, 2])
-        self.node_loc.append([2 * (self.one_dim - 1), 2])
+        self.node_loc.append([2 * (self.nw_size - 1), 2])
 
         # distance matrix
         self.num_node = len(self.node_loc)
@@ -197,45 +197,45 @@ class Environment:
 
         return self.current_state, reward, goodput, energy, connectivity_ratio
 
-    def reset(self, init_txr, beta):
-        self.beta = beta
-        self.init_txr = init_txr
+    def reset(self):
+        # self.beta = beta
+        # self.init_txr = init_txr
 
         # node state
-        self.no_events = np.zeros(self.max_block, dtype=np.int32)
-        self.coords = []
+        self.num_agents_in_blocks = np.zeros(self.num_blocks, dtype=np.int32)
+        agents_coords = []
         self.players = []
         self.node_loc = []
         self.s_init_txr = 2
 
         # block coordination random generation
-        for block in range(self.max_block):
+        for block_idx in range(self.num_blocks):
             # the number of nodes per block based on poisson point process
-            self.no_events[block] = int(np.random.poisson(self.mu * 4))
+            self.num_agents_in_blocks[block_idx] = int(np.random.poisson(self.mu * 4))
             # random location
-            self.coords.append(2 * np.random.rand(self.no_events[block], 2))
+            agents_coords.append(2 * np.random.rand(self.num_agents_in_blocks[block_idx], 2))
 
         # the number of players
-        for t in range(1, self.one_dim - 1):
+        for t in range(1, self.nw_size - 1):
             self.players += [i for i in
-                             range(np.sum(self.no_events[0:t * self.one_dim + 1]),
-                                   np.sum(self.no_events[0:(t + 1) * self.one_dim - 1]))]
+                             range(np.sum(self.num_agents_in_blocks[:t * self.nw_size + 1]),
+                                   np.sum(self.num_agents_in_blocks[:(t + 1) * self.nw_size - 1]))]
 
         self.num_players = len(self.players)
         #print("num of players: ", self.num_players)
         #print("players index: ", self.players)
 
-        for b in range(self.max_block):
-            for n in range(self.no_events[b]):
-                self.node_loc.append(self.block_coords[b] + self.coords[b][n])
+        for b in range(self.num_blocks):
+            for n in range(self.num_agents_in_blocks[b]):
+                self.node_loc.append(self.block_coords[b] + agents_coords[b][n])
 
         # two source nodes: fixed location
-        self.node_loc.append([2, 2 * (self.one_dim - 1)])
-        self.node_loc.append([2 * (self.one_dim - 1), 2 * (self.one_dim - 1)])
+        self.node_loc.append([2, 2 * (self.nw_size - 1)])
+        self.node_loc.append([2 * (self.nw_size - 1), 2 * (self.nw_size - 1)])
 
         # two destination nodes: fixed location
         self.node_loc.append([2, 2])
-        self.node_loc.append([2 * (self.one_dim - 1), 2])
+        self.node_loc.append([2 * (self.nw_size - 1), 2])
 
         # distance matrix
         self.num_node = len(self.node_loc)
