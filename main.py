@@ -60,7 +60,7 @@ if __name__ == '__main__':
     # 왜인지 모르겠지만, epsilon_step 이 100을 넘어가면 dqn이 energy를 과도하게 줄이는 방향으로 설정됨
     #epsilon = {'epsilon_start': 0.1, 'epsilon_end': 0.1, 'epsilon_step': 100}
     ep_length = args.ep_length #200#00
-    max_ep = args.max_ep #000
+    num_ep = args.num_ep #000
 
     learning_rate = args.lr
     discount_factor = args.gamma
@@ -76,9 +76,9 @@ if __name__ == '__main__':
     t = time.time()
 
 
-    for num_ep in range(max_ep):
-        print("num ep", num_ep)
-        state, num_players = env.reset() # len(state) =  num_players + 4
+    for ep in range(num_ep):
+        print("num ep", ep)
+        state = env.reset() # len(state) =  num_players + 4
         agent = []
         for i in range(len(state) - 4):
             agent.append(DQNAgent(, 1, action_space, discount_factor, i, epsilon, learning_rate))
