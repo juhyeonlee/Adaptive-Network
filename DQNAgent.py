@@ -66,8 +66,8 @@ class DQNAgent:
         action_batch = torch.cat([torch.tensor(s).unsqueeze(0) for s in batch.action]).to(self.device)
         reward_batch = torch.cat([torch.tensor(s).unsqueeze(0) for s in batch.reward]).to(self.device)
 
-        state_batch = np.reshape(state_batch, [-1, self.n_state])
-        next_state_batch = np.reshape(next_state_batch, [-1, self.n_state])
+        state_batch = state_batch.reshape([-1, self.n_state])
+        next_state_batch = next_state_batch.reshape([-1, self.n_state])
         action_batch = action_batch.unsqueeze(1)
         cur_selected_q = self.pred_network(state_batch).gather(1, action_batch)
 
