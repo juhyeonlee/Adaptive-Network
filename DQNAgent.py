@@ -61,10 +61,10 @@ class DQNAgent:
         transitions = self.memory.sample(self.batch_size)
         batch = Transition(*zip(*transitions))
 
-        state_batch = torch.cat([torch.tensor(s).unsqueeze(0).float().to(self.device) for s in batch.state])
-        next_state_batch = torch.cat([torch.tensor(s).unsqueeze(0).float().to(self.device) for s in batch.next_state])
-        action_batch = torch.cat([torch.tensor(s).unsqueeze(0).to(self.device) for s in batch.action])
-        reward_batch = torch.cat([torch.tensor(s).unsqueeze(0).to(self.device) for s in batch.reward])
+        state_batch = torch.cat([torch.tensor(s).unsqueeze(0).float() for s in batch.state]).to(self.device)
+        next_state_batch = torch.cat([torch.tensor(s).unsqueeze(0).float() for s in batch.next_state]).to(self.device)
+        action_batch = torch.cat([torch.tensor(s).unsqueeze(0) for s in batch.action]).to(self.device)
+        reward_batch = torch.cat([torch.tensor(s).unsqueeze(0) for s in batch.reward]).to(self.device)
 
         state_batch = np.reshape(state_batch, [-1, self.n_state])
         next_state_batch = np.reshape(next_state_batch, [-1, self.n_state])
