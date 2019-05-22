@@ -4,7 +4,7 @@ import yaml
 import os
 import time
 import matplotlib
-matplotlib.use("TkAgg")
+# matplotlib.use("TkAgg")
 from matplotlib import pyplot as plt
 import torch
 import random
@@ -30,7 +30,7 @@ if __name__ == '__main__':
     np.random.seed(args['manual_seed'])
     torch.manual_seed(args['manual_seed'])
     if torch.cuda.is_available():
-        torch.cuda.manual_seed['manual_seed']
+        torch.cuda.manual_seed(args['manual_seed'])
 
     # set action space
     n_actions = int(round((args['txr_max'] - args['txr_min']) / args['txr_step'])) + 1

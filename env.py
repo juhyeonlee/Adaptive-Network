@@ -2,7 +2,7 @@
 import numpy as np
 import networkx as nx
 import matplotlib
-matplotlib.use("TkAgg")
+# matplotlib.use("TkAgg")
 from matplotlib import pyplot as plt
 
 class AdhocNetEnv:
