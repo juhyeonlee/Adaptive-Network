@@ -14,7 +14,6 @@ class DQN(nn.Module):
         self.fc3 = nn.Linear(self.hidden_dim, n_actions)
 
     def forward(self, inputs):
-        inputs = torch.from_numpy(inputs).float()
         x = F.relu(self.fc1(inputs))
         x = F.relu(self.fc2(x))
         outputs = self.fc3(x)

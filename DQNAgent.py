@@ -5,6 +5,7 @@ import torch
 import torch.nn.functional as F
 import torch.optim as optim
 from DQN import DQN
+from memory import ReplayMemory, Transition
 
 
 # TODO: train & load implement
@@ -18,6 +19,8 @@ class DQNAgent:
         self.epsilon_start = args['epsilon_start']
         self.epsilon_end = args['epsilon_end']
         self.epsilon_step = args['epsilon_step']
+        self.batch_size = args['batch_size']
+        self.update_target_step = args['update_target_step']
 
         self.pred_network = DQN(n_state, n_actions, args)
         if torch.cuda.is_available():
@@ -30,36 +33,45 @@ class DQNAgent:
 
         self.optimizer = optim.RMSprop(params=self.pred_network_params, lr=args['lr'])
 
+        self.memory = ReplayMemory(args)
+
     def get_action(self, state):
         # decay epsilon value with step count
         epsilon = max(self.epsilon_end, self.epsilon_start - float(self.count) / float(self.epsilon_step))
 
+        rand_action_idx = [np.random.randint(0, self.n_actions) for t in range(len(state))]
         state = state.reshape(-1, self.n_state)
-        # state = state / 100.0  # rescale state
+        state = torch.from_numpy(state).float()
+
         q_value = self.pred_network(state)
-        # epsilon = 0.
-        if np.random.rand() < epsilon:
-            # take random action
-            action_idx = np.random.randint(0, self.n_actions)
-        else:
-            # take greedy action
-            action_idx = torch.argmax(q_value).item()
+        max_action_idx = torch.argmax(q_value, 1).tolist()
+
+        mask = np.random.rand(len(state)) < epsilon
+        action_idx = mask * rand_action_idx + (1 - mask) * max_action_idx
 
         self.count += 1
 
         return action_idx
 
-    def learn(self, state, action, reward, next_state, update_step):
+    def learn(self):
 
-        state = np.reshape(state, [-1, self.n_state])
-        next_state = np.reshape(next_state, [-1, self.n_state])
-        action = torch.tensor([int(action)]).unsqueeze(0)
-        cur_selected_q = self.pred_network(state).gather(1, action)
+        transitions = self.memory.sample(self.batch_size)
+        batch = Transition(*zip(*transitions))
 
-        pred_next_max_action = torch.argmax(self.pred_network(next_state))
-        pred_next_max_action = pred_next_max_action.unsqueeze(0).unsqueeze(0)
-        next_q_value = self.target_network(next_state).gather(1, pred_next_max_action)
-        target_q = reward + self.discount_factor * next_q_value
+        state_batch = torch.cat([torch.tensor(s).unsqueeze(0).float() for s in batch.state])
+        next_state_batch = torch.cat([torch.tensor(s).unsqueeze(0).float() for s in batch.next_state])
+        action_batch = torch.cat([torch.tensor(s).unsqueeze(0) for s in batch.action])
+        reward_batch = torch.cat([torch.tensor(s).unsqueeze(0) for s in batch.reward])
+
+        state_batch = np.reshape(state_batch, [-1, self.n_state])
+        next_state_batch = np.reshape(next_state_batch, [-1, self.n_state])
+        action_batch = action_batch.unsqueeze(1)
+        cur_selected_q = self.pred_network(state_batch).gather(1, action_batch)
+
+        pred_next_max_action = torch.argmax(self.pred_network(next_state_batch), 1)
+        pred_next_max_action = pred_next_max_action.unsqueeze(1)
+        next_q_value = self.target_network(next_state_batch).gather(1, pred_next_max_action)
+        target_q = reward_batch.unsqueeze(1) + self.discount_factor * next_q_value
 
         loss = F.mse_loss(cur_selected_q, target_q)
 
@@ -67,15 +79,19 @@ class DQNAgent:
         loss.backward()
         self.optimizer.step()
 
-        if self.count % update_step == 0:
+        if self.count % self.update_target_step == 0:
             self._update_targets()
 
     def _update_targets(self):
         self.target_network.load_state_dict(self.pred_network.state_dict())
         print('update target')
 
+    def push_memory(self, *args):
+        self.memory.push(*args)
+
     def get_greedy_action(self, state):
         state = state.reshape(-1, self.n_state)
+        state = torch.from_numpy(state).float()
         q_value = self.pred_network(state)
         action_idx = torch.argmax(q_value).item()
         return action_idx

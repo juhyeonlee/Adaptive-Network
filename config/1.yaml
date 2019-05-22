@@ -9,24 +9,27 @@ beta: 0.0    # [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3]
 init_txr: 0
 source_init_txr: 2
 
-utility_coeff: 1.0 # [1.0, 3.0, 5.0, 7.0]
-utility_pos_coeff: 5
+utility_coeff: 0.9 # [1.0, 3.0, 5.0, 7.0]
+utility_pos_coeff: 0
 
 
 # action_space
-txr_max: 1.0
-txr_min: -1.0
-txr_step: 0.1
+txr_max: 3.0
+txr_min: 0.0
+txr_step: 0.3
 
 
 # learning settings
-num_ep: 1
-ep_length: 150
-lr: 0.01
-gamma: 0.7 # discount factor
+num_ep: 50
+ep_length: 1500
+lr: 0.0001
+gamma: 0.8 # discount factor
 hidden_dim: 64
+memory_capacity: 5000
+batch_size: 16
+update_target_step: 200
 
 # epsilon greedy
 epsilon_start: 1.0
-epsilon_end: 0.01
-epsilon_step: 100
+epsilon_end: 0.05
+epsilon_step: 5000

@@ -40,8 +40,8 @@ class AdhocNetEnv:
                 i += 1
 
     def step(self, actions, steps, ep):
-        actions_txr = self.action_sapce[actions.astype('int')]
-        txr = self.last_txr + actions_txr
+        actions_txr = self.action_sapce[np.asarray(actions)]
+        txr = actions_txr #self.last_txr + actions_txr
         # txr is between 0 and 3
         txr = np.clip(txr, 0, 3)
         print(txr)
@@ -134,7 +134,8 @@ class AdhocNetEnv:
         # reward = self.utility_pos_coeff + goodput * self.utility_coeff - actions_txr
         # reward = (self.utility_pos_coeff + 2 * connectivity_ratio + (goodput * self.utility_coeff - actions_txr))
         # reward = self.utility_pos_coeff + self.utility_coeff * (goodput - self.last_goodput) - actions_txr
-        reward = self.utility_pos_coeff + self.utility_coeff * 20 * (goodput - self.last_goodput) - (1-self.utility_coeff) * actions_txr
+        # reward = self.utility_pos_coeff + self.utility_coeff * 20 * (goodput - self.last_goodput) - (1-self.utility_coeff) * actions_txr
+        reward = self.utility_coeff * goodput - 0.2 * (1-self.utility_coeff) * actions_txr
 
         # print('goodput improvement ',  goodput - self.last_goodput)
         # print('action', action)
@@ -181,9 +182,10 @@ class AdhocNetEnv:
             adj_matrix[i, i] = 1
 
         # TODO: including source and terminal nodes??
-        current_state = np.zeros(self.num_players + 4)
+        current_state = np.zeros((self.num_players + 4, 2))
         for idx, p in enumerate(players_all):
-            current_state[idx] = np.sum(adj_matrix[p]) / 100.
+            current_state[idx, 0] = np.sum(adj_matrix[p]) / 10.
+            current_state[idx, 1] = np.mean(self.d[p])
             # self.current_state[i][1] = self.txr[i] / 6.0
 
         self.last_goodput = goodput
@@ -260,10 +262,10 @@ class AdhocNetEnv:
         for i in range(self.num_node):
             adj_matrix[i, i] = 1
 
-        current_state = np.zeros(self.num_players + 4)
+        current_state = np.zeros((self.num_players + 4, 2))
         for idx, p in enumerate(players_all):
-            current_state[idx] = np.sum(adj_matrix[p]) / 100.
-
+            current_state[idx, 0] = np.sum(adj_matrix[p]) / 10.
+            current_state[idx, 1] = np.mean(self.d[p])
         # save current transmission range
         self.last_txr = txr
 
