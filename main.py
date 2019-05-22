@@ -4,7 +4,6 @@ import yaml
 import os
 import time
 import matplotlib
-# matplotlib.use("TkAgg")
 from matplotlib import pyplot as plt
 import torch
 import random
