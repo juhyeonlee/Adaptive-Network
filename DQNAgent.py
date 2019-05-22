@@ -35,13 +35,16 @@ class DQNAgent:
 
         self.memory = ReplayMemory(args)
 
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+
     def get_action(self, state):
         # decay epsilon value with step count
         epsilon = max(self.epsilon_end, self.epsilon_start - float(self.count) / float(self.epsilon_step))
 
         rand_action_idx = [np.random.randint(0, self.n_actions) for t in range(len(state))]
         state = state.reshape(-1, self.n_state)
-        state = torch.from_numpy(state).float()
+        state = torch.from_numpy(state).float().to(self.device)
 
         q_value = self.pred_network(state)
         max_action_idx = torch.argmax(q_value, 1).tolist()
@@ -58,10 +61,10 @@ class DQNAgent:
         transitions = self.memory.sample(self.batch_size)
         batch = Transition(*zip(*transitions))
 
-        state_batch = torch.cat([torch.tensor(s).unsqueeze(0).float() for s in batch.state])
-        next_state_batch = torch.cat([torch.tensor(s).unsqueeze(0).float() for s in batch.next_state])
-        action_batch = torch.cat([torch.tensor(s).unsqueeze(0) for s in batch.action])
-        reward_batch = torch.cat([torch.tensor(s).unsqueeze(0) for s in batch.reward])
+        state_batch = torch.cat([torch.tensor(s).unsqueeze(0).float().to(self.device) for s in batch.state])
+        next_state_batch = torch.cat([torch.tensor(s).unsqueeze(0).float().to(self.device) for s in batch.next_state])
+        action_batch = torch.cat([torch.tensor(s).unsqueeze(0).to(self.device) for s in batch.action])
+        reward_batch = torch.cat([torch.tensor(s).unsqueeze(0).to(self.device) for s in batch.reward])
 
         state_batch = np.reshape(state_batch, [-1, self.n_state])
         next_state_batch = np.reshape(next_state_batch, [-1, self.n_state])
@@ -91,7 +94,7 @@ class DQNAgent:
 
     def get_greedy_action(self, state):
         state = state.reshape(-1, self.n_state)
-        state = torch.from_numpy(state).float()
+        state = torch.from_numpy(state).float().to(self.device)
         q_value = self.pred_network(state)
         action_idx = torch.argmax(q_value).item()
         return action_idx

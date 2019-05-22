@@ -29,13 +29,15 @@ if __name__ == '__main__':
     random.seed(args['manual_seed'])
     np.random.seed(args['manual_seed'])
     torch.manual_seed(args['manual_seed'])
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed['manual_seed']
 
     # set action space
     n_actions = int(round((args['txr_max'] - args['txr_min']) / args['txr_step'])) + 1
     action_space = [round(args['txr_min'] + i * args['txr_step'], 1) for i in range(n_actions)]
     action_space = np.array(action_space)
 
-    # se
+    # setting learning params
     ep_length = args['ep_length']
     num_ep = args['num_ep']
 
