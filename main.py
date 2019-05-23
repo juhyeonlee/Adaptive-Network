@@ -108,6 +108,8 @@ if __name__ == '__main__':
 
         state = env.reset()
         num_players = env.num_players
+        action = np.zeros(len(state), dtype=np.float32)
+
         for steps in range(ep_length):
             action = agent.get_greedy_action(state)
             next_state, reward, goodput, energy, con_ratio = env.step(action, ep_length, test_ep)
