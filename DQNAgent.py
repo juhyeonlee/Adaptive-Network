@@ -30,13 +30,11 @@ class DQNAgent:
 
         self.optimizer = optim.RMSprop(params=self.pred_network_params, lr=args['lr'])
 
-        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     def get_action(self, state):
         # decay epsilon value with step count
         epsilon = max(self.epsilon_end, self.epsilon_start - float(self.count) / float(self.epsilon_step))
 
         state = state.reshape(-1, self.n_state)
-        state = torch.from_numpy(state).float().to(self.device)
         # state = state / 100.0  # rescale state
         q_value = self.pred_network(state)
         # epsilon = 0.
@@ -53,9 +51,9 @@ class DQNAgent:
 
     def learn(self, state, action, reward, next_state, update_step):
 
-        state = torch.from_numpy(np.reshape(state, [-1, self.n_state])).float().to(self.device)
-        next_state = torch.from_numpy(np.reshape(next_state, [-1, self.n_state])).float().to(self.device)
-        action = torch.tensor([int(action)]).unsqueeze(0).to(self.device)
+        state = np.reshape(state, [-1, self.n_state])
+        next_state = np.reshape(next_state, [-1, self.n_state])
+        action = torch.tensor([int(action)]).unsqueeze(0)
         cur_selected_q = self.pred_network(state).gather(1, action)
 
         pred_next_max_action = torch.argmax(self.pred_network(next_state))
@@ -78,7 +76,6 @@ class DQNAgent:
 
     def get_greedy_action(self, state):
         state = state.reshape(-1, self.n_state)
-        state = torch.from_numpy(state).float().to(self.device)
         q_value = self.pred_network(state)
         action_idx = torch.argmax(q_value).item()
         return action_idx

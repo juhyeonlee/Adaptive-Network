@@ -12,9 +12,10 @@ class DQN(nn.Module):
         self.fc1 = nn.Linear(self.inputs_dim, self.hidden_dim)
         self.fc2 = nn.Linear(self.hidden_dim, self.hidden_dim)
         self.fc3 = nn.Linear(self.hidden_dim, n_actions)
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     def forward(self, inputs):
-        inputs = torch.from_numpy(inputs).float()
+        inputs = torch.from_numpy(inputs).float().to(self.device)
         x = F.relu(self.fc1(inputs))
         x = F.relu(self.fc2(x))
         outputs = self.fc3(x)
