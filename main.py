@@ -4,7 +4,6 @@ import yaml
 import os
 import time
 import matplotlib
-matplotlib.use("TkAgg")
 import pickle
 from matplotlib import pyplot as plt
 from env import AdhocNetEnv
