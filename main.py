@@ -5,6 +5,7 @@ import os
 import time
 import matplotlib
 matplotlib.use("TkAgg")
+import pickle
 from matplotlib import pyplot as plt
 from env import AdhocNetEnv
 from Qlearning import QLearningAgent
@@ -34,9 +35,15 @@ if __name__ == '__main__':
     discount_factor = args['gamma']
     beta = args['beta']
 
-    # num_ep = 1
-    # sum_goodput = 0.
-    # sum_reward = 0.
+    save_goodput = []
+    save_reward = []
+    save_energy = []
+    save_connect_ratio = []
+    save_txr = []
+    # save_num_players = []
+    #
+    # if not os.path.exists('./model'):
+    #     os.makedirs('./model')
 
     env = AdhocNetEnv(action_space, args)
 
@@ -55,7 +62,7 @@ if __name__ == '__main__':
         reward_trace = []
         energy_trace = []
         con_ratio_trace = []
-        # txr_trace = []
+        txr_trace = []
         qvalue_trace = []
         sum_reward = 0.0
         for steps in range(ep_length):
@@ -91,11 +98,11 @@ if __name__ == '__main__':
         print('test performance', goodput, con_ratio,  np.sum(energy)/num_players)
         # txr_trace.append(env.txr)
 
-        # save_goodput.append(goodput_trace)
-        # save_reward.append(reward_trace)
-        # save_energy.append(energy_trace)
-        # save_connect_ratio.append(con_ratio_trace)
-        # save_txr.append(txr_trace)
+        save_goodput.append(goodput_trace)
+        save_reward.append(reward_trace)
+        save_energy.append(energy_trace)
+        save_connect_ratio.append(con_ratio_trace)
+        save_txr.append(txr_trace)
         # save_num_players.append(num_players)
         # saver.save(sess, './model/model_ep'+ str(episode) + '_nw' + str(one_dim) + '_beta' + str(beta) + '_coeff' + str(utility_coeff) + '.ckpt')
 
@@ -148,7 +155,7 @@ if __name__ == '__main__':
         # plt.savefig('fig1_one_trial_qvalue' +str(ep)+ '.eps')
 
         print('processing time ', time.time() - t)
-        plt.show()
+        # plt.show()
 
 
         # txr_mat = save_txr[0]  # np.mean(save_txr, axis=0)
@@ -164,8 +171,8 @@ if __name__ == '__main__':
         # a.set_label('Radius of Transmission Range')
         # plt.savefig('fig1_one_trial_color' +str(episode)+ '.eps')
         # plt.show()
-        # with open(str(episode) + 'onetime_var_nw' + str(one_dim) + '_beta' + str(beta) + '_coeff' + str(utility_coeff) + '.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
-        #     pickle.dump([save_reward, save_goodput, save_connect_ratio, save_energy, save_txr], f)
+    with open('qtable_var_nw' + str(args['nw_size']) + '_beta' + str(beta) + '_coeff' + str(args['utility_coeff']) + '.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
+        pickle.dump([save_reward, save_goodput, save_connect_ratio, save_energy, save_txr], f)
 
     # print('average goodput: ', np.sum(sum_goodput), 'average reward :', np.sum(sum_energy))
 
