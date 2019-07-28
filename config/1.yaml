@@ -21,7 +21,7 @@ txr_step: 0.1
 
 # learning settings
 num_ep: 1000
-ep_length: 150
+ep_length: 700
 lr: 0.01
 gamma: 0.7 # discount factor
 hidden_dim: 64
@@ -29,4 +29,4 @@ hidden_dim: 64
 # epsilon greedy
 epsilon_start: 1.0
 epsilon_end: 0.01
-epsilon_step: 100
+epsilon_step: 500

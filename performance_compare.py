@@ -6,8 +6,13 @@ import matplotlib.pyplot as plt
 nw_size = [7] #[5, 7]
 
 for c in nw_size:
-    with open('dqn_reproduce_var_nw' + str(c) + '_beta' + str(0.0) + '_coeff1.0.pkl', 'rb') as f:
-
+    # with open('results_comparison_new/dqn_reproduce_var_nw' + str(c) + '_beta' + str(0.0) + '_coeff0.8.pkl', 'rb') as f:
+    # with open('results_comparison_new/qtable_longer_var_nw' + str(c) + '_beta' + str(0.0) + '_coeff0.8.pkl', 'rb') as f:
+    with open('results_comparison_new/dqn_init1_var_nw' + str(c) + '_beta' + str(0.0) + '_coeff0.8.pkl', 'rb') as f:
+    # with open('results_comparison_new/qtable_var_nw' + str(c) + '_beta' + str(0.0) + '_coeff0.8.pkl', 'rb') as f:
+    # with open('../Adaptive-Network-exps/jhlee_pc/20180207_beta_exp_100ep/var_nw7_beta0.0_coeff0.8.pkl', 'rb') as f:
+    # with open('../Adaptive-Network-exps/minhae_desktop/one_dim_5/var_nw5_beta0.0_dim_space[5]180207-082245.pkl', 'rb') as f:
+    # with open('../Adaptive-Network-exps/jhlee_pc/random/var_randomrandom_loss_nw5_beta0.0_coeff0.8.pkl', 'rb') as f:
 
         save_reward, save_goodput, save_connect_ratio, save_energy, save_txr = pickle.load(f)
         # save_reward, save_goodput, save_connect_ratio, save_energy,  save_txr, dd, aa, ss, rr = pickle.load(f)
@@ -42,3 +47,4 @@ for c in nw_size:
         print(np.mean(energy))
         print(np.std(energy))
         print('\n')
+
