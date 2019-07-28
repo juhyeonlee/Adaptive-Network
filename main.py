@@ -180,7 +180,7 @@ if __name__ == '__main__':
         # a.set_label('Radius of Transmission Range')
         # plt.savefig('fig1_one_trial_color' +str(episode)+ '.eps')
         # plt.show()
-    with open('dqn_reproduce_var_nw' + str(args['nw_size']) + '_beta' + str(beta) + '_coeff' + str(args['utility_coeff']) + '.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
+    with open('dqn_init2_var_nw' + str(args['nw_size']) + '_beta' + str(beta) + '_coeff' + str(args['utility_coeff']) + '.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
         pickle.dump([save_reward, save_goodput, save_connect_ratio, save_energy, save_txr], f)
 
     # print('average goodput: ', np.sum(sum_goodput), 'average reward :', np.sum(sum_energy))
