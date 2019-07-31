@@ -40,6 +40,7 @@ class QLearningAgent:
         # epsilon = np.sqrt(self.ep_length ** 2 - steps ** 2)
         if np.random.rand() < epsilon:
             # take random action
+            print(epsilon)
             action_idx = np.random.randint(0, self.n_actions)
         else:
             # take action according to the q function table
