@@ -14,6 +14,7 @@ class AdhocNetEnv:
         self.source_init_txr = args['source_init_txr']
         self.beta = args['beta'] # noise
         self.action_sapce = action_space
+        self.max_txr = args['max_txr']
 
         # reward parameters
         self.utility_coeff = args['utility_coeff'] # weight on goodput
@@ -43,7 +44,7 @@ class AdhocNetEnv:
         actions_txr = self.action_sapce[actions.astype('int')]
         txr = self.last_txr + actions_txr
         # txr is between 0 and 3
-        txr = np.clip(txr, 0, 3)
+        txr = np.clip(txr, 0, self.max_txr)
         print(txr)
         # source node tx_r is fixed as s_init_txr
         txr[len(txr) - 4] = self.source_init_txr
