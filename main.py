@@ -25,7 +25,7 @@ if __name__ == '__main__':
     n_actions = int(round((args['txr_max'] - args['txr_min']) / args['txr_step'])) + 1
     action_space = [round(args['txr_min'] + i * args['txr_step'], 1) for i in range(n_actions)]
     action_space = np.array(action_space)
-
+    
     # se
     ep_length = args['ep_length']
     num_ep = args['num_ep']
@@ -170,7 +170,7 @@ if __name__ == '__main__':
         # a.set_label('Radius of Transmission Range')
         # plt.savefig('fig1_one_trial_color' +str(episode)+ '.eps')
         # plt.show()
-    with open('qtable_test_var_nw' + str(args['nw_size']) + '_beta' + str(beta) + '_coeff' + str(args['utility_coeff']) + '.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
+    with open('qtable_500rand_more_var_nw' + str(args['nw_size']) + '_beta' + str(beta) + '_coeff' + str(args['utility_coeff']) + '.pkl', 'wb') as f:  # Python 3: open(..., 'wb')
         pickle.dump([save_reward, save_goodput, save_connect_ratio, save_energy, save_txr], f)
 
     # print('average goodput: ', np.sum(sum_goodput), 'average reward :', np.sum(sum_energy))

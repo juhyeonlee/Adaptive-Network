@@ -32,19 +32,20 @@ class QLearningAgent:
     # get action for the state according to the q function table
     # agent pick action of epsilon-greedy policy
     def get_action(self, state, steps):
-        epsilon = max(self.epsilon_end, self.epsilon_start - float(self.count) / float(self.epsilon_step))
+        if self.count < 500:
+            epsilon = 1.0
+        else:
+            epsilon = max(self.epsilon_end, self.epsilon_start - float(self.count-499) / float(self.epsilon_step))
 
-        #epsilon = 0.4 #
-        #epsilon =  max(self.epsilon_end, self.epsilon_start - float(self.count) / float(self.epislon_step))
         # epsilon = np.sqrt(self.ep_length ** 2 - steps ** 2)
         if np.random.rand() < epsilon:
             # take random action
+            print(epsilon)
             action_idx = np.random.randint(0, self.n_actions)
         else:
             # take action according to the q function table
             state_action = self.q_table[state]
             action_idx = self.arg_max(state_action)
-            #print('arg_max result-action_idx:',action_idx) # for checking arg_max function
         self.count += 1
 
         return action_idx
@@ -52,7 +53,6 @@ class QLearningAgent:
     def get_greedy_action(self, state):
         state_action = self.q_table[state]
         action_idx = self.arg_max(state_action)
-        #action  = action - 3
         return action_idx
 
     @staticmethod
