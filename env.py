@@ -8,6 +8,7 @@ class AdhocNetEnv:
     def __init__(self, action_space, args):
         self.nw_size = args['nw_size']
         self.num_blocks = args['nw_size'] ** 2
+        self.block_size = args['block_size'] 
         self.mu = args['mu'] # node density
         self.init_txr = args['init_txr']
         self.source_init_txr = args['source_init_txr']
@@ -33,8 +34,8 @@ class AdhocNetEnv:
 
         # default coordination for each block
         i = 0
-        for c2 in range(0, 2 * self.nw_size - 1, 2):
-            for c1 in range(0, 2 * self.nw_size - 1, 2):
+        for c2 in range(0, self.block_size * self.nw_size - 1, self.block_size):
+            for c1 in range(0, self.block_size * self.nw_size - 1, self.block_size):
                 self.block_coords[i, :] = [c1, c2]
                 i += 1
 
@@ -146,7 +147,7 @@ class AdhocNetEnv:
         agents_coords = []
         for block in range(self.num_blocks):
             # random location
-            agents_coords.append(2 * np.random.rand(self.num_agents_in_blocks[block], 2))
+            agents_coords.append(self.block_size * np.random.rand(self.num_agents_in_blocks[block], 2))
 
         self.node_loc = []
         for b in range(self.num_blocks):
@@ -154,12 +155,12 @@ class AdhocNetEnv:
                 self.node_loc.append(self.block_coords[b] + agents_coords[b][n])
 
         # two source nodes: fixed location
-        self.node_loc.append([2, 2 * (self.nw_size - 1)])
-        self.node_loc.append([2 * (self.nw_size - 1), 2 * (self.nw_size - 1)])
+        self.node_loc.append([self.block_size, self.block_size * (self.nw_size - 1)])
+        self.node_loc.append([self.block_size * (self.nw_size - 1), self.block_size * (self.nw_size - 1)])
 
         # two destination nodes: fixed location
-        self.node_loc.append([2, 2])
-        self.node_loc.append([2 * (self.nw_size - 1), 2])
+        self.node_loc.append([self.block_size, self.block_size])
+        self.node_loc.append([self.block_size * (self.nw_size - 1), self.block_size])
 
         # # distance matrix
         # self.num_node = len(self.node_loc)
@@ -201,7 +202,7 @@ class AdhocNetEnv:
             # the number of nodes per block based on poisson point process
             self.num_agents_in_blocks[block_idx] = int(np.random.poisson(self.mu * 4))
             # random location
-            agents_coords.append(2 * np.random.rand(self.num_agents_in_blocks[block_idx], 2))
+            agents_coords.append(self.block_size * np.random.rand(self.num_agents_in_blocks[block_idx], 2))
 
         # the number of players (plyaers: the nodes between sources and destinations)
         for t in range(1, self.nw_size - 1):
@@ -218,12 +219,12 @@ class AdhocNetEnv:
                 self.node_loc.append(self.block_coords[b] + agents_coords[b][n])
 
         # two source nodes: fixed location
-        self.node_loc.append([2, 2 * (self.nw_size - 1)])
-        self.node_loc.append([2 * (self.nw_size - 1), 2 * (self.nw_size - 1)])
+        self.node_loc.append([self.block_size, self.block_size * (self.nw_size - 1)])
+        self.node_loc.append([self.block_size * (self.nw_size - 1), self.block_size * (self.nw_size - 1)])
 
         # two destination nodes: fixed location
-        self.node_loc.append([2, 2])
-        self.node_loc.append([2 * (self.nw_size - 1), 2])
+        self.node_loc.append([self.block_size, self.block_size])
+        self.node_loc.append([self.block_size * (self.nw_size - 1), self.block_size])
 
         # distance matrix
         self.num_node = len(self.node_loc)
