@@ -8,7 +8,12 @@ nw_size = [7] #[5, 7]
 for c in nw_size:
     # with open('results_comparison_new/dqn_reproduce_var_nw' + str(c) + '_beta' + str(0.0) + '_coeff0.8.pkl', 'rb') as f:
     # with open('results_comparison_new/qtable_longer_var_nw' + str(c) + '_beta' + str(0.0) + '_coeff0.8.pkl', 'rb') as f:
-    with open('results_comparison_new/dqn_init1_var_nw' + str(c) + '_beta' + str(0.0) + '_coeff0.8.pkl', 'rb') as f:
+    # with open('results_comparison_new/dqn_init1_var_nw' + str(c) + '_beta' + str(0.0) + '_coeff0.8.pkl', 'rb') as f:
+    # with open('results_comparison_new/qtable_eend0.1_var_nw5_beta0.0_coeff0.8.pkl', 'rb') as f:
+    with open('results_comparison_new/qtable_500rand_var_nw5_beta0.0_coeff0.8.pkl', 'rb') as f:
+    # with open('results_comparison_new/qtable_longer1000_var_nw5_beta0.0_coeff0.8.pkl', 'rb') as f:
+    # with open('results_comparison_new/qtable_lr0.1_var_nw5_beta0.0_coeff0.8.pkl', 'rb') as f:
+    # with open('results_comparison_new/random_var_nw5_beta0.0_coeff0.8.pkl', 'rb') as f:
     # with open('results_comparison_new/qtable_var_nw' + str(c) + '_beta' + str(0.0) + '_coeff0.8.pkl', 'rb') as f:
     # with open('../Adaptive-Network-exps/jhlee_pc/20180207_beta_exp_100ep/var_nw7_beta0.0_coeff0.8.pkl', 'rb') as f:
     # with open('../Adaptive-Network-exps/minhae_desktop/one_dim_5/var_nw5_beta0.0_dim_space[5]180207-082245.pkl', 'rb') as f:
@@ -27,14 +32,14 @@ for c in nw_size:
         print('connectivity ratio')
         connect_ratio = []
         for i in range(len(total_connect_ratio)):
-            connect_ratio += total_connect_ratio[i][150:151]
+            connect_ratio += total_connect_ratio[i][-1:]
         print(np.mean(connect_ratio))
         print(np.std(connect_ratio))
         # print(sum / len(sum))
 
         goodput = []
         for i in range(len(total_goodput)):
-            goodput += total_goodput[i][150:151]
+            goodput += total_goodput[i][-1:]
         goodput = np.array(goodput) * 910
         print('goodput')
         print(np.mean(goodput) )
@@ -42,7 +47,7 @@ for c in nw_size:
 
         energy = []
         for i in range(len(total_energy)):
-            energy += total_energy[i][150:151]
+            energy += total_energy[i][-1:]
         print('energy')
         print(np.mean(energy))
         print(np.std(energy))
