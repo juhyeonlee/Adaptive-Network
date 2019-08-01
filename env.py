@@ -43,7 +43,7 @@ class AdhocNetEnv:
         txr = self.last_txr + actions_txr
         # txr is between 0 and 3
         txr = np.clip(txr, 0, 3)
-        print(txr)
+        #print(txr)
         # source node tx_r is fixed as s_init_txr
         txr[len(txr) - 4] = self.source_init_txr
         txr[len(txr) - 3] = self.source_init_txr
