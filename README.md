@@ -3,7 +3,7 @@
 reinforcement learning based adaptive network 
 
 
-See branch DQN-pytorch for Deep RL codes with pytorch.
+*See branch DQN-pytorch for Deep RL codes with pytorch.*
 
 Dependency: pyyaml, numpy, matplotlib, networkx, pytorch
 
