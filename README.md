@@ -7,10 +7,14 @@ reinforcement learning based adaptive network
 
 
 You should install following python modules.
+
 **Dependency: pyyaml, numpy, matplotlib, networkx, pytorch**
+
 
 You can install pyyaml, numpy, matplotlib, networkx library with pip install or conda install command.
 You can install pytorch by using the instruction at https://pytorch.org/.
+
+
 
 Main codes consists of four .py files.
 1. main.py: main function - load hyperparameter settings from config/*.yaml file and run the main loop and plot graphs
