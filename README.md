@@ -18,7 +18,7 @@ You can install pytorch by using the instruction at https://pytorch.org/.
 
 
 **Main codes consist of four .py files.**
-1. main.py: main function code - load hyperparameter settings from config/*.yaml file and run the main loop and plot graphs
-2. env.py: network environment code
-3. DQNAgent.py: The agent choose actions with regard to the environment using deep neural network
-4. DQN.py: deep neural network code
+1. *main.py*: main function code - load hyperparameter settings from config/*.yaml file and run the main loop and plot graphs
+2. *env.py*: network environment code
+3. *DQNAgent.py*: The agent choose actions with regard to the environment using deep neural network
+4. *DQN.py*: deep neural network code
