@@ -13,7 +13,7 @@ You should install following python modules.
 
 You can install pyyaml, numpy, matplotlib, networkx library with pip install or conda install command.
 You can install pytorch by using the instruction at https://pytorch.org/.
-<br>
+<br></br>
 
 
 Main codes consist of four .py files.
