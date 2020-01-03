@@ -22,3 +22,7 @@ You can install pytorch by using the instruction at https://pytorch.org/.
 2. *env.py*: network environment code
 3. *DQNAgent.py*: The agent choose actions with regard to the environment using deep neural network
 4. *DQN.py*: deep neural network code
+
+**To change experiment settings (hyperparameters and env parameters)**
+go to *config* folder and copy&paste 1.yaml file and make your own yaml file with different experiment setting.
+And change the file path to your yaml file in *main.py*
