@@ -182,7 +182,7 @@ class AdhocNetEnv:
         # TODO: including source and terminal nodes??
         current_state = np.zeros(self.num_players + 4)
         for idx, p in enumerate(players_all):
-            current_state[idx] = np.sum(adj_matrix[p]) #/ 100.
+            current_state[idx] = np.sum(adj_matrix[p]) / 100.
             # self.current_state[i][1] = self.txr[i] / 6.0
 
         self.last_goodput = goodput
@@ -261,7 +261,7 @@ class AdhocNetEnv:
 
         current_state = np.zeros(self.num_players + 4)
         for idx, p in enumerate(players_all):
-            current_state[idx] = np.sum(adj_matrix[p]) #/ 100.
+            current_state[idx] = np.sum(adj_matrix[p]) / 100.
 
         # save current transmission range
         self.last_txr = txr
