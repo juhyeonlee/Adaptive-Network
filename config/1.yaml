@@ -20,7 +20,7 @@ txr_step: 0.1
 
 
 # learning settings
-num_ep: 300
+num_ep: 200
 ep_length: 25000
 lr: 0.1
 gamma: 0.1 #0.7 # discount factor

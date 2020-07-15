@@ -265,7 +265,7 @@ class AdhocNetEnv:
 
         # save current transmission range
         self.last_txr = txr
-
+        self.last_goodput = 0.0
         return current_state
 
 
